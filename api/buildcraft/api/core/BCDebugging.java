@@ -1,20 +1,11 @@
-/** Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team http://www.mod-buildcraft.com
- *
- * The BuildCraft API is distributed under the terms of the MIT License. Please check the contents of the license, which
- * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ */
 package buildcraft.api.core;
 
-import java.lang.reflect.Method;
 import java.util.Locale;
-
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.LoaderState;
-import net.minecraftforge.fml.common.ModContainer;
-
-import buildcraft.api.BCModules;
 
 /** Provides a way to quickly enable or disable certain debug conditions via VM arguments or whether the client/server
  * is in a dev environment */
@@ -37,39 +28,25 @@ public class BCDebugging {
     private static final DebugStatus DEBUG_STATUS;
 
     static {
-        // Basically we enable debugging for the dev-environment, and disable everything for normal players.
-        // However if you provide VM arguments then the behaviour changes somewhat:
-        // (VM argument is "-Dbuildcraft.debug=...")
+        // VM argument is "-Dbuildcraft.debug=..."
         // - "enable" Enables debugging even if you are not in a dev environment
-        // - "disable" Disables ALL debugging (and doesn't output any messages even in the dev environment)
+        // - "disable" Disables ALL debugging
         // - "log" Major debug options are turned on. Registry setup + API usage etc
         // - "all" All possible debug options are turned on. Lots of spam. Not recommended.
-        // In addition logging is force-enabled for prereleases as that makes testing much easier
-
-        boolean isDev;
-        try {
-            Method getTileEntity = World.class.getDeclaredMethod("getTileEntity", BlockPos.class);
-            BCLog.logger.info("[debugger] Method found: World.getTileEntity = " + getTileEntity);
-            isDev = true;
-        } catch (Throwable ignored) {
-            // If it didn't find it then we aren't in a dev environment
-            isDev = false;
-            BCLog.logger.info("[debugger] Not a dev environment!");
-        }
+        // STUB(R.Chen): Forge dev-environment detection (Loader/LoaderState) dropped;
+        // dev detection now relies solely on the explicit -Dbuildcraft.debug VM arg.
+        boolean isDev = Boolean.getBoolean("buildcraft.debug.dev");
 
         String value = System.getProperty("buildcraft.debug");
         if ("enable".equals(value)) DEBUG_STATUS = DebugStatus.ENABLE;
         else if ("all".equals(value)) DEBUG_STATUS = DebugStatus.ALL;
         else if ("disable".equals(value)) {
-            // let people disable the messages if they are in a dev environment but don't want messages.
             DEBUG_STATUS = DebugStatus.NONE;
         } else if ("log".equals(value)) {
-            // Some debugging options are more than just logging, so we will differentiate between them
             DEBUG_STATUS = DebugStatus.LOGGING_ONLY;
         } else if (isDev) {
             DEBUG_STATUS = DebugStatus.ENABLE;
         } else {
-            // Most likely a built jar - don't spam people with info they probably don't need
             DEBUG_STATUS = DebugStatus.NONE;
         }
 
@@ -120,7 +97,7 @@ public class BCDebugging {
             log.append(" add the option \"-D");
             log.append(prop);
             log.append("=true\" to your launch config as a VM argument (").append(type).append(").");
-            BCLog.logger.info(log);
+            BCLog.logger.info(log.toString());
         }
         return false;
     }

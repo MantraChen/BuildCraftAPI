@@ -1,15 +1,17 @@
-/** Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team http://www.mod-buildcraft.com
- *
- * The BuildCraft API is distributed under the terms of the MIT License. Please check the contents of the license, which
- * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ */
 package buildcraft.api.core;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+
+import buildcraft.BuildCraftFabric;
 
 public final class BCLog {
-    public static final Logger logger = LogManager.getLogger("BuildCraft");
+    // STUB(R.Chen): log4j Logger -> slf4j wrapper around BuildCraftFabric.LOGGER
+    public static final Logger logger = BuildCraftFabric.LOGGER;
 
     /** Deactivate constructor */
     private BCLog() {}
@@ -27,17 +29,18 @@ public final class BCLog {
             msg.append(", ").append(stackTrace[0]);
         }
 
-        logger.log(Level.ERROR, msg.toString());
+        logger.error(msg.toString());
 
         if (classFile != null) {
             msg.append("API error: ").append(classFile.getSimpleName()).append(" is loaded from ").append(classFile.getProtectionDomain()
                     .getCodeSource().getLocation());
-            logger.log(Level.ERROR, msg.toString());
+            logger.error(msg.toString());
         }
     }
 
+    // STUB(R.Chen): decouple from BuildCraftAPI.getVersion() to keep libLeaf minimal
     @Deprecated
     public static String getVersion() {
-        return BuildCraftAPI.getVersion();
+        return "unknown";
     }
 }
