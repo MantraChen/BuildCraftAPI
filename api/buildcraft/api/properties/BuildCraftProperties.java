@@ -1,15 +1,22 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.properties;
 
 import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.IntProperty;
+import net.minecraft.state.property.Property;
+import net.minecraft.util.DyeColor;
+import net.minecraft.util.math.Direction;
 
 import buildcraft.api.enums.EnumDecoratedBlock;
 import buildcraft.api.enums.EnumEngineType;
@@ -20,63 +27,52 @@ import buildcraft.api.enums.EnumPowerStage;
 import buildcraft.api.enums.EnumSpring;
 
 public final class BuildCraftProperties {
-    public static final IProperty<EnumFacing> BLOCK_FACING = PropertyEnum.create("facing", EnumFacing.class, EnumFacing.Plane.HORIZONTAL.facings());
-    public static final IProperty<EnumFacing> BLOCK_FACING_6 = PropertyEnum.create("facing", EnumFacing.class);
+    public static final Property<Direction> BLOCK_FACING = EnumProperty.of("facing", Direction.class, Direction.Type.HORIZONTAL);
+    public static final Property<Direction> BLOCK_FACING_6 = EnumProperty.of("facing", Direction.class);
 
-    public static final IProperty<EnumDyeColor> BLOCK_COLOR = PropertyEnum.create("color", EnumDyeColor.class);
-    public static final IProperty<EnumSpring> SPRING_TYPE = PropertyEnum.create("type", EnumSpring.class);
-    public static final IProperty<EnumEngineType> ENGINE_TYPE = PropertyEnum.create("type", EnumEngineType.class);
-    public static final IProperty<EnumLaserTableType> LASER_TABLE_TYPE = PropertyEnum.create("type", EnumLaserTableType.class);
-    public static final IProperty<EnumMachineState> MACHINE_STATE = PropertyEnum.create("state", EnumMachineState.class);
-    public static final IProperty<EnumPowerStage> ENERGY_STAGE = PropertyEnum.create("stage", EnumPowerStage.class);
-    public static final IProperty<EnumOptionalSnapshotType> SNAPSHOT_TYPE = PropertyEnum.create("snapshot_type", EnumOptionalSnapshotType.class);
-    public static final IProperty<EnumDecoratedBlock> DECORATED_BLOCK = PropertyEnum.create("decoration_type", EnumDecoratedBlock.class);
+    public static final Property<DyeColor> BLOCK_COLOR = EnumProperty.of("color", DyeColor.class);
+    public static final Property<EnumSpring> SPRING_TYPE = EnumProperty.of("type", EnumSpring.class);
+    public static final Property<EnumEngineType> ENGINE_TYPE = EnumProperty.of("type", EnumEngineType.class);
+    public static final Property<EnumLaserTableType> LASER_TABLE_TYPE = EnumProperty.of("type", EnumLaserTableType.class);
+    public static final Property<EnumMachineState> MACHINE_STATE = EnumProperty.of("state", EnumMachineState.class);
+    public static final Property<EnumPowerStage> ENERGY_STAGE = EnumProperty.of("stage", EnumPowerStage.class);
+    public static final Property<EnumOptionalSnapshotType> SNAPSHOT_TYPE = EnumProperty.of("snapshot_type", EnumOptionalSnapshotType.class);
+    public static final Property<EnumDecoratedBlock> DECORATED_BLOCK = EnumProperty.of("decoration_type", EnumDecoratedBlock.class);
 
-    public static final IProperty<Integer> GENERIC_PIPE_DATA = PropertyInteger.create("pipe_data", 0, 15);
-    public static final IProperty<Integer> LED_POWER = PropertyInteger.create("led_power", 0, 3);
+    public static final Property<Integer> GENERIC_PIPE_DATA = IntProperty.of("pipe_data", 0, 15);
+    public static final Property<Integer> LED_POWER = IntProperty.of("led_power", 0, 3);
 
-    public static final IProperty<Boolean> JOINED_BELOW = PropertyBool.create("joined_below");
-    public static final IProperty<Boolean> MOVING = PropertyBool.create("moving");
-    public static final IProperty<Boolean> LED_DONE = PropertyBool.create("led_done");
-    public static final IProperty<Boolean> ACTIVE = PropertyBool.create("active");
-    public static final IProperty<Boolean> VALID = PropertyBool.create("valid");
+    public static final Property<Boolean> JOINED_BELOW = BooleanProperty.of("joined_below");
+    public static final Property<Boolean> MOVING = BooleanProperty.of("moving");
+    public static final Property<Boolean> LED_DONE = BooleanProperty.of("led_done");
+    public static final Property<Boolean> ACTIVE = BooleanProperty.of("active");
+    public static final Property<Boolean> VALID = BooleanProperty.of("valid");
 
-    public static final IProperty<Boolean> CONNECTED_UP = PropertyBool.create("connected_up");
-    public static final IProperty<Boolean> CONNECTED_DOWN = PropertyBool.create("connected_down");
-    public static final IProperty<Boolean> CONNECTED_EAST = PropertyBool.create("connected_east");
-    public static final IProperty<Boolean> CONNECTED_WEST = PropertyBool.create("connected_west");
-    public static final IProperty<Boolean> CONNECTED_NORTH = PropertyBool.create("connected_north");
-    public static final IProperty<Boolean> CONNECTED_SOUTH = PropertyBool.create("connected_south");
+    public static final Property<Boolean> CONNECTED_UP = BooleanProperty.of("connected_up");
+    public static final Property<Boolean> CONNECTED_DOWN = BooleanProperty.of("connected_down");
+    public static final Property<Boolean> CONNECTED_EAST = BooleanProperty.of("connected_east");
+    public static final Property<Boolean> CONNECTED_WEST = BooleanProperty.of("connected_west");
+    public static final Property<Boolean> CONNECTED_NORTH = BooleanProperty.of("connected_north");
+    public static final Property<Boolean> CONNECTED_SOUTH = BooleanProperty.of("connected_south");
 
-    public static final Map<EnumFacing, IProperty<Boolean>> CONNECTED_MAP;
+    public static final Map<Direction, Property<Boolean>> CONNECTED_MAP;
 
-    // Block state setting flags -these are used by World.markAndNotifyBlock and World.setBlockState. These flags can be
-    // added together to pass the additions
+    // Block state setting flags — used by World.setBlockState.
     public static final int UPDATE_NONE = 0;
-    /** This updates the neighbouring blocks that the new block is set. It also updates the comparator output of this
-     * block. */
     public static final int UPDATE_NEIGHBOURS = 1;
-    /** This will mark the block for an update next tick, as well as send an update to the client (if this is a server
-     * world). */
     public static final int MARK_BLOCK_FOR_UPDATE = 2;
-    /** This will mark the block for an update, even if this is a client world. It is useless to use this if
-     * world.isRemote returns false. */
     public static final int UPDATE_EVEN_CLIENT = 4 + MARK_BLOCK_FOR_UPDATE; // 6
-
-    // Pre-added flags- pass these as-is to the World.markAndNotifyBlock and World.setBlockState methods.
-    /** This will do what both {@link #UPDATE_NEIGHBOURS} and {@link #MARK_BLOCK_FOR_UPDATE} do. */
     public static final int MARK_THIS_AND_NEIGHBOURS = UPDATE_NEIGHBOURS + MARK_BLOCK_FOR_UPDATE;
-    /** This will update everything about this block. */
     public static final int UPDATE_ALL = UPDATE_NEIGHBOURS + MARK_BLOCK_FOR_UPDATE + UPDATE_EVEN_CLIENT;
 
     static {
-        Map<EnumFacing, IProperty<Boolean>> map = Maps.newEnumMap(EnumFacing.class);
-        map.put(EnumFacing.DOWN, CONNECTED_DOWN);
-        map.put(EnumFacing.UP, CONNECTED_UP);
-        map.put(EnumFacing.EAST, CONNECTED_EAST);
-        map.put(EnumFacing.WEST, CONNECTED_WEST);
-        map.put(EnumFacing.NORTH, CONNECTED_NORTH);
-        map.put(EnumFacing.SOUTH, CONNECTED_SOUTH);
+        Map<Direction, Property<Boolean>> map = Maps.newEnumMap(Direction.class);
+        map.put(Direction.DOWN, CONNECTED_DOWN);
+        map.put(Direction.UP, CONNECTED_UP);
+        map.put(Direction.EAST, CONNECTED_EAST);
+        map.put(Direction.WEST, CONNECTED_WEST);
+        map.put(Direction.NORTH, CONNECTED_NORTH);
+        map.put(Direction.SOUTH, CONNECTED_SOUTH);
         CONNECTED_MAP = Maps.immutableEnumMap(map);
     }
 
