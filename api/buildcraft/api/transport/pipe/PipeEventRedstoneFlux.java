@@ -1,6 +1,13 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport.pipe;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 
 public abstract class PipeEventRedstoneFlux extends PipeEvent {
     public final IFlowRedstoneFlux flow;
@@ -36,7 +43,6 @@ public abstract class PipeEventRedstoneFlux extends PipeEvent {
             return this.receiver;
         }
 
-        /** Sets this pipe to be one that receives power from external sources. */
         public void setReceiver(boolean receiver) {
             this.receiver = receiver;
         }
@@ -51,18 +57,18 @@ public abstract class PipeEventRedstoneFlux extends PipeEvent {
     }
 
     public static class PrimaryDirection extends PipeEventRedstoneFlux {
-        private EnumFacing facing;
+        private Direction facing;
 
-        public PrimaryDirection(IPipeHolder holder, IFlowRedstoneFlux flow, EnumFacing facing) {
+        public PrimaryDirection(IPipeHolder holder, IFlowRedstoneFlux flow, Direction facing) {
             super(holder, flow);
             this.facing = facing;
         }
 
-        public EnumFacing getFacing() {
+        public Direction getFacing() {
             return facing;
         }
 
-        public void setFacing(EnumFacing facing) {
+        public void setFacing(Direction facing) {
             this.facing = facing;
         }
     }

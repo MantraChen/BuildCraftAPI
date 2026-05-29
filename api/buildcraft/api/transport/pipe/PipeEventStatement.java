@@ -1,10 +1,17 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport.pipe;
 
 import java.util.Collection;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 
 import buildcraft.api.statements.IActionInternal;
 import buildcraft.api.statements.IActionInternalSided;
@@ -31,9 +38,10 @@ public abstract class PipeEventStatement extends PipeEvent {
         public final Collection<ITriggerInternalSided> triggers;
 
         @Nonnull
-        public final EnumFacing side;
+        public final Direction side;
 
-        public AddTriggerInternalSided(IPipeHolder holder, Collection<ITriggerInternalSided> triggers, @Nonnull EnumFacing side) {
+        public AddTriggerInternalSided(IPipeHolder holder, Collection<ITriggerInternalSided> triggers,
+            @Nonnull Direction side) {
             super(holder);
             this.triggers = triggers;
             this.side = side;
@@ -55,9 +63,10 @@ public abstract class PipeEventStatement extends PipeEvent {
         public final Collection<IActionInternalSided> actions;
 
         @Nonnull
-        public final EnumFacing side;
+        public final Direction side;
 
-        public AddActionInternalSided(IPipeHolder holder, Collection<IActionInternalSided> actions, @Nonnull EnumFacing side) {
+        public AddActionInternalSided(IPipeHolder holder, Collection<IActionInternalSided> actions,
+            @Nonnull Direction side) {
             super(holder);
             this.actions = actions;
             this.side = side;

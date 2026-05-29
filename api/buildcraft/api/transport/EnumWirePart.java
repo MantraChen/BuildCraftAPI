@@ -1,8 +1,19 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport;
 
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.AxisDirection;
-import net.minecraft.util.math.AxisAlignedBB;
+import java.util.EnumMap;
+import java.util.Map;
+
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Direction.Axis;
+import net.minecraft.util.math.Direction.AxisDirection;
 import net.minecraft.util.math.Vec3d;
 
 public enum EnumWirePart {
@@ -20,30 +31,29 @@ public enum EnumWirePart {
     public final AxisDirection x, y, z;
 
     /** The bounding box for rendering a wire or selecting an already-placed wire. */
-    public final AxisAlignedBB boundingBox;
+    public final Box boundingBox;
 
     /** The bounding box that is used when adding pipe wire to a pipe */
-    public final AxisAlignedBB boundingBoxPossible;
+    public final Box boundingBoxPossible;
 
     EnumWirePart(boolean x, boolean y, boolean z) {
         this.x = x ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE;
         this.y = y ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE;
         this.z = z ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE;
-        double x1 = this.x.getOffset() * (5 / 16.0) + 0.5;
-        double y1 = this.y.getOffset() * (5 / 16.0) + 0.5;
-        double z1 = this.z.getOffset() * (5 / 16.0) + 0.5;
-        double x2 = this.x.getOffset() * (4 / 16.0) + 0.5;
-        double y2 = this.y.getOffset() * (4 / 16.0) + 0.5;
-        double z2 = this.z.getOffset() * (4 / 16.0) + 0.5;
-        this.boundingBox = new AxisAlignedBB(x1, y1, z1, x2, y2, z2);
+        double x1 = this.x.offset() * (5 / 16.0) + 0.5;
+        double y1 = this.y.offset() * (5 / 16.0) + 0.5;
+        double z1 = this.z.offset() * (5 / 16.0) + 0.5;
+        double x2 = this.x.offset() * (4 / 16.0) + 0.5;
+        double y2 = this.y.offset() * (4 / 16.0) + 0.5;
+        double z2 = this.z.offset() * (4 / 16.0) + 0.5;
+        this.boundingBox = new Box(x1, y1, z1, x2, y2, z2);
 
         Vec3d center = new Vec3d(0.5, 0.5, 0.5);
         Vec3d edge = new Vec3d(x ? 0.75 : 0.25, y ? 0.75 : 0.25, z ? 0.75 : 0.25);
-        this.boundingBoxPossible = new AxisAlignedBB(center.x, center.y, center.z, edge.x,
-            edge.y, edge.z);
+        this.boundingBoxPossible = new Box(center.x, center.y, center.z, edge.x, edge.y, edge.z);
     }
 
-    public AxisDirection getDirection(EnumFacing.Axis axis) {
+    public AxisDirection getDirection(Axis axis) {
         switch (axis) {
             case X:
                 return x;

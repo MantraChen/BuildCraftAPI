@@ -1,11 +1,18 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport;
 
 import java.util.EnumMap;
 import java.util.Map;
 
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Direction.AxisDirection;
 
 public class WireNode {
     public final BlockPos pos;
@@ -38,10 +45,10 @@ public class WireNode {
         return "(" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ", " + part + ")";
     }
 
-    public WireNode offset(EnumFacing face) {
-        int nx = (part.x == AxisDirection.POSITIVE ? 1 : 0) + face.getFrontOffsetX();
-        int ny = (part.y == AxisDirection.POSITIVE ? 1 : 0) + face.getFrontOffsetY();
-        int nz = (part.z == AxisDirection.POSITIVE ? 1 : 0) + face.getFrontOffsetZ();
+    public WireNode offset(Direction face) {
+        int nx = (part.x == AxisDirection.POSITIVE ? 1 : 0) + face.getOffsetX();
+        int ny = (part.y == AxisDirection.POSITIVE ? 1 : 0) + face.getOffsetY();
+        int nz = (part.z == AxisDirection.POSITIVE ? 1 : 0) + face.getOffsetZ();
         EnumWirePart nPart = EnumWirePart.get(nx, ny, nz);
         if (nx < 0 || ny < 0 || nz < 0 || nx > 1 || ny > 1 || nz > 1) {
             return new WireNode(pos.offset(face), nPart);
@@ -50,10 +57,10 @@ public class WireNode {
         }
     }
 
-    public Map<EnumFacing, WireNode> getAllPossibleConnections() {
-        Map<EnumFacing, WireNode> map = new EnumMap<>(EnumFacing.class);
+    public Map<Direction, WireNode> getAllPossibleConnections() {
+        Map<Direction, WireNode> map = new EnumMap<>(Direction.class);
 
-        for (EnumFacing face : EnumFacing.VALUES) {
+        for (Direction face : Direction.values()) {
             map.put(face, offset(face));
         }
         return map;

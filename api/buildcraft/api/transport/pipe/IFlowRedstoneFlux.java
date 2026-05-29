@@ -1,18 +1,24 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport.pipe;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 
-import net.minecraftforge.energy.IEnergyStorage;
-
+// TODO(R.Chen): IEnergyStorage → team.reborn.energy.api.EnergyStorage; references updated in pipe implementation.
 public interface IFlowRedstoneFlux extends IFlowPowerLike {
     /** Makes this pipe reconfigure itself, possibly due to the addition of new modules. */
     @Override
     void reconfigure();
 
-    /** Attempts to extract power from the {@link IEnergyStorage} connected to this pipe on the given side.
-     * 
+    /** Attempts to extract power from the EnergyStorage connected to this pipe on the given side.
+     *
      * @param maxPower The Maximum amount of power that can be extracted.
      * @param from The side (of this pipe) to take power from.
      * @return The amount of power extracted. */
-    int tryExtractPower(int maxPower, EnumFacing from);
+    int tryExtractPower(int maxPower, Direction from);
 }

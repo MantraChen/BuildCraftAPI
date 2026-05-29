@@ -1,66 +1,57 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport.pipe;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-
-import buildcraft.api.core.IFluidFilter;
-import buildcraft.api.core.IFluidHandlerAdv;
-import buildcraft.api.transport.pluggable.PipePluggable;
-
+// STUB(R.Chen): FluidStack → Fabric Transfer API FluidVariant + long droplets in Phase 4E.
+// IFluidFilter → Object stub (Forge FluidStack dependency removed).
+// ActionResult<FluidStack> replaced with long (droplet amount) until proper migration.
 public interface IFlowFluid {
-    /** @deprecated use the version below with a simulate paramater. */
-    @Nullable
+    /** @deprecated use the version below with a simulate parameter. */
     @Deprecated
-    default FluidStack tryExtractFluid(int millibuckets, EnumFacing from, FluidStack filter) {
-        return tryExtractFluid(millibuckets, from, filter, false);
+    @Nullable
+    default long tryExtractFluid(long droplets, Direction from, /* STUB: FluidStack filter */ Object filter) {
+        return tryExtractFluid(droplets, from, filter, false);
     }
 
-    /** @param millibuckets
-     * @param from
-     * @param filter The fluidstack that the extracted fluid must match, or null for any fluid.
-     * @return The fluidstack extracted and inserted into the pipe. */
+    /** Attempts to extract fluid from the connected tank.
+     * STUB(R.Chen): return type will be FluidVariant-based in Phase 4E. */
     @Nullable
-    FluidStack tryExtractFluid(int millibuckets, EnumFacing from, FluidStack filter, boolean simulate);
+    long tryExtractFluid(long droplets, Direction from, /* STUB: FluidStack filter */ Object filter, boolean simulate);
 
-    /** @deprecated use the version below with a simulate paramater. */
+    /** @deprecated use the version below with a simulate parameter. */
     @Deprecated
-    default ActionResult<FluidStack> tryExtractFluidAdv(int millibuckets, EnumFacing from, IFluidFilter filter) {
-        return tryExtractFluidAdv(millibuckets, from, filter, false);
+    default long tryExtractFluidAdv(long droplets, Direction from,
+        /* STUB(R.Chen): IFluidFilter → FluidVariant filter in Phase 4E */ Object filter) {
+        return tryExtractFluidAdv(droplets, from, filter, false);
     }
 
-    /** Advanced version of {@link #tryExtractFluid(int, EnumFacing, FluidStack, boolean)}. Note that this only works for
-     * instances of {@link IFluidHandler} that ALSO extends {@link IFluidHandlerAdv}
-     * 
-     * @param millibuckets
-     * @param from
-     * @param filter A filter to try and match fluids.
-     * @return The fluidstack extracted and inserted into the pipe. If {@link ActionResult#getType()} equals
-     *         {@link EnumActionResult#PASS} then it means that the {@link IFluidHandler} didn't implement
-     *         {@link IFluidHandlerAdv} and you should call the basic version, if you can. */
-    ActionResult<FluidStack> tryExtractFluidAdv(int millibuckets, EnumFacing from, IFluidFilter filter, boolean simulate);
+    /** Advanced extraction.
+     * STUB(R.Chen): IFluidFilter/FluidVariant-based return in Phase 4E. */
+    long tryExtractFluidAdv(long droplets, Direction from,
+        /* STUB(R.Chen): IFluidFilter → FluidVariant filter */ Object filter, boolean simulate);
 
-    /** Attempts to insert a fluid directly into the pipe. Note that this will fail if the pipe currently contains a
-     * different fluid type.
-     * 
-     * @param from The side that the fluid should *not* go in, or null if the fluid may flow in any direction.
-     * @return The amount of fluid that was accepted, or 0 if no fluid was accepted. */
-    int insertFluidsForce(FluidStack fluid, @Nullable EnumFacing from, boolean simulate);
+    /** Attempts to insert a fluid directly into the pipe.
+     * STUB(R.Chen): fluid param will be FluidVariant + amount in Phase 4E.
+     *
+     * @param fluid placeholder for FluidVariant
+     * @param from The side that the fluid should NOT go in, or null for any direction.
+     * @return The amount of fluid accepted in droplets. */
+    long insertFluidsForce(/* STUB: FluidVariant */ Object fluid, long amount, @Nullable Direction from,
+        boolean simulate);
 
-    /** Tries to extract fluids directly from the pipe. NOTE: This is intended for {@link PipeBehaviour} and
-     * {@link PipePluggable} implementors ONLY! This will result in very buggy behaviour if external tiles try to use
-     * this!
-     * 
-     * @param min The minimum amount of fluid to extract. If less than this amount is in the given center then nothing
-     *            will be extracted.
-     * @param section The section to extract from. Null means the center.
-     * @param simulate
-     * @return */
+    /** Tries to extract fluids directly from the pipe.
+     * STUB(R.Chen): return type will be FluidVariant-based in Phase 4E.
+     *
+     * @param section The section to extract from. Null means the center. */
     @Nullable
-    FluidStack extractFluidsForce(int min, int max, @Nullable EnumFacing section, boolean simulate);
+    Object extractFluidsForce(long min, long max, @Nullable Direction section, boolean simulate);
 }

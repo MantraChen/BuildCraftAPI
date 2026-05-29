@@ -1,78 +1,87 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport.pipe;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.RayTraceResult;
+import net.fabricmc.api.EnvType;
 
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Direction;
 
 import buildcraft.api.core.EnumPipePart;
 
-public abstract class PipeBehaviour implements ICapabilityProvider {
+// STUB(R.Chen): ICapabilityProvider removed — Forge capability system has no Fabric equivalent.
+// Lookup API capability methods stubbed; restore in Phase 4E.
+// STUB(R.Chen): Side → EnvType; MessageContext → Object.
+public abstract class PipeBehaviour {
     public final IPipe pipe;
 
     public PipeBehaviour(IPipe pipe) {
         this.pipe = pipe;
     }
 
-    public PipeBehaviour(IPipe pipe, NBTTagCompound nbt) {
+    public PipeBehaviour(IPipe pipe, NbtCompound nbt) {
         this.pipe = pipe;
     }
 
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound nbt = new NBTTagCompound();
-
+    public NbtCompound writeToNbt() {
+        NbtCompound nbt = new NbtCompound();
         return nbt;
     }
 
-    public void writePayload(PacketBuffer buffer, Side side) {}
+    /** STUB(R.Chen): Side → EnvType; MessageContext → Object. Full signature restoration in Phase 4E. */
+    public void writePayload(PacketByteBuf buffer, EnvType side) {}
 
-    public void readPayload(PacketBuffer buffer, Side side, MessageContext ctx) throws IOException {}
+    /** STUB(R.Chen): Side → EnvType; MessageContext → Object. Full signature restoration in Phase 4E. */
+    public void readPayload(PacketByteBuf buffer, EnvType side,
+        /* STUB(R.Chen): MessageContext */ Object ctx) throws IOException {}
 
-    /** @deprecated Replaced by {@link #getTextureData(EnumFacing)}. */
+    /** @deprecated Replaced by {@link #getTextureData(Direction)}. */
     @Deprecated
-    public int getTextureIndex(EnumFacing face) {
+    public int getTextureIndex(Direction face) {
         return 0;
     }
 
     /** Gets the texture data to use for the specified face. This may return null for the center, which indicates that
      * the center of the pipe will use the face texture instead.
-     * 
+     *
      * @param face Null indicates the center of the pipe.
      * @return The texture data for the given face. This may be null, but only for the center! */
-    public PipeFaceTex getTextureData(EnumFacing face) {
+    public PipeFaceTex getTextureData(Direction face) {
         return PipeFaceTex.get(getTextureIndex(face));
     }
 
     // Event handling
 
-    public boolean canConnect(EnumFacing face, PipeBehaviour other) {
+    public boolean canConnect(Direction face, PipeBehaviour other) {
         return true;
     }
 
-    public boolean canConnect(EnumFacing face, TileEntity oTile) {
+    public boolean canConnect(Direction face, BlockEntity oTile) {
         return true;
     }
 
     /** Used to force a connection to a given tile, even if the {@link PipeFlow} wouldn't normally connect to it. */
-    public boolean shouldForceConnection(EnumFacing face, TileEntity oTile) {
+    public boolean shouldForceConnection(Direction face, BlockEntity oTile) {
         return false;
     }
 
-    public boolean onPipeActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ,
+    public boolean onPipeActivate(PlayerEntity player, HitResult trace, float hitX, float hitY, float hitZ,
         EnumPipePart part) {
         return false;
     }
@@ -81,15 +90,15 @@ public abstract class PipeBehaviour implements ICapabilityProvider {
 
     public void onTick() {}
 
-    @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
+    /** STUB(R.Chen): Forge Capability → Fabric API Lookup in Phase 4E. */
+    public boolean hasCapability(@Nonnull Object capability, Direction facing) {
         return getCapability(capability, facing) != null;
     }
 
-    @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+    /** STUB(R.Chen): Forge Capability<T> → Fabric API Lookup in Phase 4E. */
+    public <T> T getCapability(@Nonnull Object capability, Direction facing) {
         return null;
     }
 
-    public void addDrops(NonNullList<ItemStack> toDrop, int fortune) {}
+    public void addDrops(List<ItemStack> toDrop, int fortune) {}
 }

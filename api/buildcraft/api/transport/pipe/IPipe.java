@@ -1,12 +1,19 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport.pipe;
 
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.util.DyeColor;
+import net.minecraft.util.math.Direction;
 
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-
-public interface IPipe extends ICapabilityProvider {
+// STUB(R.Chen): ICapabilityProvider removed — Forge capability system has no Fabric equivalent.
+// Lookup API integration deferred to Phase 4E.
+public interface IPipe {
     IPipeHolder getHolder();
 
     PipeDefinition getDefinition();
@@ -15,19 +22,19 @@ public interface IPipe extends ICapabilityProvider {
 
     PipeFlow getFlow();
 
-    EnumDyeColor getColour();
+    DyeColor getColour();
 
-    void setColour(EnumDyeColor colour);
+    void setColour(DyeColor colour);
 
     void markForUpdate();
 
-    TileEntity getConnectedTile(EnumFacing side);
+    BlockEntity getConnectedTile(Direction side);
 
-    IPipe getConnectedPipe(EnumFacing side);
+    IPipe getConnectedPipe(Direction side);
 
-    boolean isConnected(EnumFacing side);
+    boolean isConnected(Direction side);
 
-    ConnectedType getConnectedType(EnumFacing side);
+    ConnectedType getConnectedType(Direction side);
 
     enum ConnectedType {
         TILE,

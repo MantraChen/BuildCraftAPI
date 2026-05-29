@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport.pipe;
 
 import java.util.Arrays;
@@ -6,10 +13,9 @@ import java.util.EnumSet;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 
-import net.minecraftforge.fluids.FluidStack;
-
+// STUB(R.Chen): FluidStack fields replaced with Object stubs until Phase 4E FluidVariant migration.
 public abstract class PipeEventFluid extends PipeEvent {
 
     public final IFlowFluid flow;
@@ -27,39 +33,27 @@ public abstract class PipeEventFluid extends PipeEvent {
     }
 
     public static class TryInsert extends PipeEventFluid {
-        public final EnumFacing from;
-        /** The incoming fluidstack. Currently changing this does nothing. */
+        public final Direction from;
+        /** STUB(R.Chen): FluidStack → FluidVariant + amount in Phase 4E. */
         @Nonnull
-        public final FluidStack fluid;
+        public final Object fluid;
 
-        public TryInsert(IPipeHolder holder, IFlowFluid flow, EnumFacing from, @Nonnull FluidStack fluid) {
+        public TryInsert(IPipeHolder holder, IFlowFluid flow, Direction from, @Nonnull Object fluid) {
             super(true, holder, flow);
             this.from = from;
             this.fluid = fluid;
         }
     }
 
-    /** Fired after collecting the amounts of fluid that can be moved from each pipe part into the centre. */
     public static class PreMoveToCentre extends PipeEventFluid {
-        /** The fluid that is being moved. Future versions of BC *might* allow more than one fluid type per pipe, but
-         * for the moment the API doesn't allow pipes to do this. */
-        public final FluidStack fluid;
-
-        /** The maximum amount of fluid that the centre pipe could accept. */
+        /** STUB(R.Chen): FluidStack → FluidVariant + amount in Phase 4E. */
+        public final Object fluid;
         public final int totalAcceptable;
-
-        /** Array of {@link EnumFacing#getIndex()} to the maximum amount of fluid that a given side can offer. DO NOT
-         * CHANGE THIS! */
         public final int[] totalOffered;
-
-        // Used for checking the state
         private final int[] totalOfferedCheck;
-
-        /** Array of {@link EnumFacing#getIndex()} to the amount of fluid that the given side will actually offer to the
-         * centre. This should *never* be larger than */
         public final int[] actuallyOffered;
 
-        public PreMoveToCentre(IPipeHolder holder, IFlowFluid flow, FluidStack fluid, int totalAcceptable,
+        public PreMoveToCentre(IPipeHolder holder, IFlowFluid flow, Object fluid, int totalAcceptable,
             int[] totalOffered, int[] actuallyOffered) {
             super(holder, flow);
             this.fluid = fluid;
@@ -84,19 +78,14 @@ public abstract class PipeEventFluid extends PipeEvent {
         }
     }
 
-    /** Fired after {@link PreMoveToCentre} when all of the amounts have been totalled up. */
     public static class OnMoveToCentre extends PipeEventFluid {
-        /** The fluid that is being moved. Future versions of BC *might* allow more than one fluid type per pipe, but
-         * for the moment the API doesn't allow pipes to do this. */
-        public final FluidStack fluid;
-
+        /** STUB(R.Chen): FluidStack → FluidVariant + amount in Phase 4E. */
+        public final Object fluid;
         public final int[] fluidLeavingSide;
         public final int[] fluidEnteringCentre;
-
-        // Used for checking the state maximums
         private final int[] fluidLeaveCheck, fluidEnterCheck;
 
-        public OnMoveToCentre(IPipeHolder holder, IFlowFluid flow, FluidStack fluid, int[] fluidLeavingSide,
+        public OnMoveToCentre(IPipeHolder holder, IFlowFluid flow, Object fluid, int[] fluidLeavingSide,
             int[] fluidEnteringCentre) {
             super(holder, flow);
             this.fluid = fluid;
@@ -127,38 +116,31 @@ public abstract class PipeEventFluid extends PipeEvent {
     }
 
     public static class SideCheck extends PipeEventFluid {
-        public final FluidStack fluid;
-
-        /** The priorities of each side. Stored inversely to the values given, so a higher priority will have a lower
-         * value than a lower priority. */
+        /** STUB(R.Chen): FluidStack → FluidVariant + amount in Phase 4E. */
+        public final Object fluid;
         private final int[] priority = new int[6];
-        private final EnumSet<EnumFacing> allowed = EnumSet.allOf(EnumFacing.class);
+        private final EnumSet<Direction> allowed = EnumSet.allOf(Direction.class);
 
-        public SideCheck(IPipeHolder holder, IFlowFluid flow, FluidStack fluid) {
+        public SideCheck(IPipeHolder holder, IFlowFluid flow, Object fluid) {
             super(holder, flow);
             this.fluid = fluid;
         }
 
-        /** Checks to see if a side if allowed. Note that this may return true even though a later handler might
-         * disallow a side, so you should only use this to skip checking a side (for example a diamond pipe might not
-         * check the filters for a specific side if its already been disallowed) */
-        public boolean isAllowed(EnumFacing side) {
+        public boolean isAllowed(Direction side) {
             return allowed.contains(side);
         }
 
-        /** Disallows the specific side(s) from being a destination for the item. If no sides are allowed, then the
-         * fluid will stay in the current pipe section. */
-        public void disallow(EnumFacing... sides) {
-            for (EnumFacing side : sides) {
+        public void disallow(Direction... sides) {
+            for (Direction side : sides) {
                 allowed.remove(side);
             }
         }
 
-        public void disallowAll(Collection<EnumFacing> sides) {
+        public void disallowAll(Collection<Direction> sides) {
             allowed.removeAll(sides);
         }
 
-        public void disallowAllExcept(EnumFacing side) {
+        public void disallowAllExcept(Direction side) {
             if (allowed.contains(side)) {
                 allowed.clear();
                 allowed.add(side);
@@ -167,7 +149,7 @@ public abstract class PipeEventFluid extends PipeEvent {
             }
         }
 
-        public void disallowAllExcept(EnumFacing... sides) {
+        public void disallowAllExcept(Direction... sides) {
             switch (sides.length) {
                 case 0: {
                     allowed.clear();
@@ -190,8 +172,8 @@ public abstract class PipeEventFluid extends PipeEvent {
                     return;
                 }
                 default: {
-                    EnumSet<EnumFacing> except = EnumSet.noneOf(EnumFacing.class);
-                    for (EnumFacing face : sides) {
+                    EnumSet<Direction> except = EnumSet.noneOf(Direction.class);
+                    for (Direction face : sides) {
                         except.add(face);
                     }
                     this.allowed.retainAll(except);
@@ -200,7 +182,7 @@ public abstract class PipeEventFluid extends PipeEvent {
             }
         }
 
-        public void disallowAllExcept(Collection<EnumFacing> sides) {
+        public void disallowAllExcept(Collection<Direction> sides) {
             allowed.retainAll(sides);
         }
 
@@ -208,25 +190,25 @@ public abstract class PipeEventFluid extends PipeEvent {
             allowed.clear();
         }
 
-        public void increasePriority(EnumFacing side) {
+        public void increasePriority(Direction side) {
             increasePriority(side, 1);
         }
 
-        public void increasePriority(EnumFacing side, int by) {
+        public void increasePriority(Direction side, int by) {
             priority[side.ordinal()] -= by;
         }
 
-        public void decreasePriority(EnumFacing side) {
+        public void decreasePriority(Direction side) {
             decreasePriority(side, 1);
         }
 
-        public void decreasePriority(EnumFacing side, int by) {
+        public void decreasePriority(Direction side, int by) {
             increasePriority(side, -by);
         }
 
-        public EnumSet<EnumFacing> getOrder() {
+        public EnumSet<Direction> getOrder() {
             if (allowed.isEmpty()) {
-                return EnumSet.noneOf(EnumFacing.class);
+                return EnumSet.noneOf(Direction.class);
             }
             if (allowed.size() == 1) {
                 return allowed;
@@ -238,7 +220,6 @@ public abstract class PipeEventFluid extends PipeEvent {
                         break priority_search;
                     }
                 }
-                // No need to work out the order when all destinations have the same priority
                 return allowed;
             }
 
@@ -251,8 +232,8 @@ public abstract class PipeEventFluid extends PipeEvent {
                     continue;
                 }
                 last = current;
-                EnumSet<EnumFacing> set = EnumSet.noneOf(EnumFacing.class);
-                for (EnumFacing face : EnumFacing.VALUES) {
+                EnumSet<Direction> set = EnumSet.noneOf(Direction.class);
+                for (Direction face : Direction.values()) {
                     if (allowed.contains(face)) {
                         if (priority[face.ordinal()] == current) {
                             set.add(face);
@@ -263,7 +244,7 @@ public abstract class PipeEventFluid extends PipeEvent {
                     return set;
                 }
             }
-            return EnumSet.noneOf(EnumFacing.class);
+            return EnumSet.noneOf(Direction.class);
         }
     }
 }

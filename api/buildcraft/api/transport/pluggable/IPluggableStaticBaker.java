@@ -1,13 +1,20 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport.pluggable;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.render.model.BakedQuad;
 
-@SideOnly(Side.CLIENT)
+@Environment(EnvType.CLIENT)
 public interface IPluggableStaticBaker<K extends PluggableModelKey> {
     List<BakedQuad> bake(K key);
 }

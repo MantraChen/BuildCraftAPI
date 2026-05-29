@@ -1,16 +1,23 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.DyeColor;
+import net.minecraft.util.math.Direction;
 
 /** Interface for pipes to implement if they can accept items in a similar fashion to BC pipes. */
 public interface IInjectable {
     /** Tests to see if this pipe can accept items from the given direction. Useless to call this if you are going to
-     * call {@link #injectItem(ItemStack, boolean, EnumFacing, EnumDyeColor, double)} straight after. */
-    boolean canInjectItems(EnumFacing from);
+     * call {@link #injectItem(ItemStack, boolean, Direction, DyeColor, double)} straight after. */
+    boolean canInjectItems(Direction from);
 
     /** Offers an ItemStack for addition to the pipe. Will be rejected if the pipe doesn't accept items from that side.
      * This should never be called on the client side! Implementors are free to throw an exception if be called on the
@@ -23,5 +30,5 @@ public interface IInjectable {
      * @param speed The speed of the item to be added (in blocks per tick) or {@code <=0} if a default should be used.
      * @return The left over stack that was not accepted. */
     @Nonnull
-    ItemStack injectItem(@Nonnull ItemStack stack, boolean doAdd, EnumFacing from, EnumDyeColor color, double speed);
+    ItemStack injectItem(@Nonnull ItemStack stack, boolean doAdd, Direction from, DyeColor color, double speed);
 }

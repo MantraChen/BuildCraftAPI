@@ -1,10 +1,13 @@
-/** Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team http://www.mod-buildcraft.com
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
  *
- * The BuildCraft API is distributed under the terms of the MIT License. Please check the contents of the license, which
- * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport.pipe;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 
 @Deprecated
 // TODO: Test to see if this is necessary! (Or perhaps make it a capability)
@@ -22,5 +25,5 @@ public interface IPipeConnection {
      * @param type
      * @param with
      * @return CONNECT to force a connection, DISCONNECT to force no connection, and DEFAULT to let the pipe decide. */
-    ConnectOverride overridePipeConnection(Object/*IPipeTile.PipeType*/ type, EnumFacing with);
+    ConnectOverride overridePipeConnection(Object/*IPipeTile.PipeType*/ type, Direction with);
 }

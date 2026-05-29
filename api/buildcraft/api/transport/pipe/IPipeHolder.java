@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport.pipe;
 
 import javax.annotation.Nonnull;
@@ -5,14 +12,12 @@ import javax.annotation.Nullable;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-
-import net.minecraftforge.common.capabilities.Capability;
 
 import buildcraft.api.statements.containers.IRedstoneStatementContainer;
 import buildcraft.api.transport.IWireManager;
@@ -24,27 +29,26 @@ public interface IPipeHolder extends IRedstoneStatementContainer {
 
     BlockPos getPipePos();
 
-    TileEntity getPipeTile();
+    BlockEntity getPipeTile();
 
     IPipe getPipe();
 
-    /** @return true if the player should be able to interact with the pipe holder in GUI form. Implementors should
-     *         generally check to ensure they are still present in-world. */
-    boolean canPlayerInteract(EntityPlayer player);
+    /** @return true if the player should be able to interact with the pipe holder in GUI form. */
+    boolean canPlayerInteract(PlayerEntity player);
 
     @Nullable
-    PipePluggable getPluggable(EnumFacing side);
+    PipePluggable getPluggable(Direction side);
 
     @Nullable
-    TileEntity getNeighbourTile(EnumFacing side);
+    BlockEntity getNeighbourTile(Direction side);
 
     @Nullable
-    IPipe getNeighbourPipe(EnumFacing side);
+    IPipe getNeighbourPipe(Direction side);
 
-    /** Gets the given capability going outwards from the pipe. This will test the
-     * {@link PipePluggable#getInternalCapability(Capability)} first, and the look at the neighbouring tile. */
+    /** Gets the given capability going outwards from the pipe.
+     * STUB(R.Chen): Forge Capability<T> → Fabric API Lookup in Phase 4E. */
     @Nullable
-    <T> T getCapabilityFromPipe(EnumFacing side, @Nonnull Capability<T> capability);
+    <T> T getCapabilityFromPipe(Direction side, @Nonnull /* STUB(R.Chen): Capability<T> */ Object capability);
 
     IWireManager getWireManager();
 
@@ -58,35 +62,30 @@ public interface IPipeHolder extends IRedstoneStatementContainer {
     /** @param parts The parts that want to send a network update. */
     void scheduleNetworkUpdate(PipeMessageReceiver... parts);
 
-    /** Schedules a GUI network update, that is only the players who currently have a pipe element open in a GUI will be
-     * updated.
-     * 
-     * @param parts The parts that want to send a network update. */
+    /** Schedules a GUI network update. */
     void scheduleNetworkGuiUpdate(PipeMessageReceiver... parts);
 
-    /** Sends a custom message from a pluggable or pipe centre to the server/client (depending on which side this is
-     * currently on). */
+    /** Sends a custom message from a pluggable or pipe centre to the server/client. */
     void sendMessage(PipeMessageReceiver to, IWriter writer);
 
     void sendGuiMessage(PipeMessageReceiver to, IWriter writer);
 
     /** Called on the server whenever a gui container object is opened. */
-    void onPlayerOpen(EntityPlayer player);
+    void onPlayerOpen(PlayerEntity player);
 
     /** Called on the server whenever a gui container object is closed. */
-    void onPlayerClose(EntityPlayer player);
+    void onPlayerClose(PlayerEntity player);
 
     enum PipeMessageReceiver {
         BEHAVIOUR(null),
         FLOW(null),
-        PLUGGABLE_DOWN(EnumFacing.DOWN),
-        PLUGGABLE_UP(EnumFacing.UP),
-        PLUGGABLE_NORTH(EnumFacing.NORTH),
-        PLUGGABLE_SOUTH(EnumFacing.SOUTH),
-        PLUGGABLE_WEST(EnumFacing.WEST),
-        PLUGGABLE_EAST(EnumFacing.EAST),
+        PLUGGABLE_DOWN(Direction.DOWN),
+        PLUGGABLE_UP(Direction.UP),
+        PLUGGABLE_NORTH(Direction.NORTH),
+        PLUGGABLE_SOUTH(Direction.SOUTH),
+        PLUGGABLE_WEST(Direction.WEST),
+        PLUGGABLE_EAST(Direction.EAST),
         WIRES(null);
-        // Wires are updated differently (they never use this API)
 
         public static final PipeMessageReceiver[] VALUES = values();
         public static final PipeMessageReceiver[] PLUGGABLES = new PipeMessageReceiver[6];
@@ -99,14 +98,14 @@ public interface IPipeHolder extends IRedstoneStatementContainer {
             }
         }
 
-        public final EnumFacing face;
+        public final Direction face;
 
-        PipeMessageReceiver(EnumFacing face) {
+        PipeMessageReceiver(Direction face) {
             this.face = face;
         }
     }
 
     interface IWriter {
-        void write(PacketBuffer buffer);
+        void write(PacketByteBuf buffer);
     }
 }

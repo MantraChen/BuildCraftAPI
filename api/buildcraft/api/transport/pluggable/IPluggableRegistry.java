@@ -1,13 +1,20 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport.pluggable;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 public interface IPluggableRegistry {
     default void register(PluggableDefinition definition) {
         register(definition.identifier, definition);
     }
 
-    void register(ResourceLocation identifier, PluggableDefinition definition);
+    void register(Identifier identifier, PluggableDefinition definition);
 
-    PluggableDefinition getDefinition(ResourceLocation identifier);
+    PluggableDefinition getDefinition(Identifier identifier);
 }

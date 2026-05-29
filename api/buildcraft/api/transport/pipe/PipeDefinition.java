@@ -1,16 +1,20 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport.pipe;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Identifier;
 
 public final class PipeDefinition {
-    public final ResourceLocation identifier;
+    public final Identifier identifier;
     public final IPipeCreator logicConstructor;
     public final IPipeLoader logicLoader;
     public final PipeFlowType flowType;
@@ -63,11 +67,11 @@ public final class PipeDefinition {
 
     @FunctionalInterface
     public interface IPipeLoader {
-        PipeBehaviour loadBehaviour(IPipe t, NBTTagCompound u);
+        PipeBehaviour loadBehaviour(IPipe t, NbtCompound u);
     }
 
     public static class PipeDefinitionBuilder {
-        public ResourceLocation identifier;
+        public Identifier identifier;
         public String texturePrefix;
         public String[] textureSuffixes = { "" };
         public IPipeCreator logicConstructor;
@@ -83,7 +87,7 @@ public final class PipeDefinition {
 
         public PipeDefinitionBuilder() {}
 
-        public PipeDefinitionBuilder(ResourceLocation identifier, IPipeCreator logicConstructor,
+        public PipeDefinitionBuilder(Identifier identifier, IPipeCreator logicConstructor,
             IPipeLoader logicLoader, PipeFlowType flowType) {
             this.identifier = identifier;
             this.logicConstructor = logicConstructor;
@@ -99,17 +103,14 @@ public final class PipeDefinition {
             return id(both).tex(both);
         }
 
+        // STUB(R.Chen): Loader/ModContainer removed — use Fabric mod container APIs instead.
         private static String getActiveModId() {
-            ModContainer mod = Loader.instance().activeModContainer();
-            if (mod == null) {
-                throw new IllegalStateException(
-                    "Cannot interact with PipeDefinition outside of an actively scoped mod!");
-            }
-            return mod.getModId();
+            // TODO(R.Chen): replace with FabricLoader.getInstance().getModContainer(...) lookup
+            throw new IllegalStateException("getActiveModId() is not yet implemented for Fabric 1.20.1");
         }
 
         public PipeDefinitionBuilder id(String post) {
-            identifier = new ResourceLocation(getActiveModId(), post);
+            identifier = new Identifier(getActiveModId(), post);
             return this;
         }
 
@@ -117,27 +118,15 @@ public final class PipeDefinition {
             return texPrefix(prefix).texSuffixes(suffixes);
         }
 
-        /** Sets the texture prefix to be: <code>[current_mod_id]:pipes/[prefix]</code> where [current_mod_id] is the
-         * modid of the currently loaded mod, and [prefix] is the string parameter given.
-         * 
-         * @return this */
         public PipeDefinitionBuilder texPrefix(String prefix) {
             return texPrefixDirect(getActiveModId() + ":pipes/" + prefix);
         }
 
-        /** Sets the {@link #texturePrefix} to the input string, without any additions or changes (unlike
-         * {@link #texPrefix(String)})
-         * 
-         * @return this */
         public PipeDefinitionBuilder texPrefixDirect(String prefix) {
             texturePrefix = prefix;
             return this;
         }
 
-        /** Sets {@link #textureSuffixes} to the given array, or to <code>{""}</code> if the argument list is empty or
-         * null.
-         * 
-         * @return this. */
         public PipeDefinitionBuilder texSuffixes(String... suffixes) {
             if (suffixes == null || suffixes.length == 0) {
                 textureSuffixes = new String[] { "" };

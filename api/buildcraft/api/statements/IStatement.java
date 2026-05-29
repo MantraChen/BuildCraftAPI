@@ -1,7 +1,10 @@
-/** Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team http://www.mod-buildcraft.com
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
  *
- * The BuildCraft API is distributed under the terms of the MIT License. Please check the contents of the license, which
- * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.statements;
 
 /** Designates some sort of statement. Most of the time you should implement {@link ITriggerExternal},
@@ -17,14 +20,6 @@ public interface IStatement extends IGuiSlot {
     /** Create parameters for the statement. */
     IStatementParameter createParameter(int index);
 
-    /** Creates a parameter for the given index, optionally returning the old param if it is still valid. By default
-     * this checks the classes of the old and new parameters, however it is sensible to override this check in case the
-     * parameters given no longer match. For example if you return {@link StatementParameterItemStack} from
-     * {@link #createParameter(int)} and require the stack to match a filter, but the incoming stack might not.
-     * 
-     * @param old
-     * @param index
-     * @return */
     default IStatementParameter createParameter(IStatementParameter old, int index) {
         IStatementParameter _new = createParameter(index);
         if (old == null || _new == null) {
@@ -38,8 +33,7 @@ public interface IStatement extends IGuiSlot {
     /** This returns the statement after a left rotation. Used in particular in blueprints orientation. */
     IStatement rotateLeft();
 
-    /** This returns a group of related statements. For example "redstone signal input" should probably return an array
-     * of "RS_SIGNAL_ON" and "RS_SIGNAL_OFF". It is recommended to return an array containing this object. */
+    /** This returns a group of related statements. */
     IStatement[] getPossible();
 
     default boolean isPossibleOrdered() {

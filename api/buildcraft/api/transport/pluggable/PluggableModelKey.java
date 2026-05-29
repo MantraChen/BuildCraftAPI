@@ -1,18 +1,31 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport.pluggable;
 
 import java.util.Objects;
 
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.util.math.Direction;
+
+// STUB(R.Chen): BlockRenderLayer → RenderLayer; CUTOUT/TRANSLUCENT accessed via RenderLayer.getCutout()/getTranslucent().
+@Environment(EnvType.CLIENT)
 public abstract class PluggableModelKey {
-    public final BlockRenderLayer layer;
-    public final EnumFacing side;
+    public final RenderLayer layer;
+    public final Direction side;
     private final int hash;
 
-    public PluggableModelKey(BlockRenderLayer layer, EnumFacing side) {
-        if (layer != BlockRenderLayer.CUTOUT && layer != BlockRenderLayer.TRANSLUCENT) {
-            throw new IllegalArgumentException("Can only use CUTOUT or TRANSLUCENT at the moment (was " + layer + ")");
+    public PluggableModelKey(RenderLayer layer, Direction side) {
+        if (!layer.equals(RenderLayer.getCutout()) && !layer.equals(RenderLayer.getTranslucent())) {
+            throw new IllegalArgumentException(
+                "Can only use CUTOUT or TRANSLUCENT at the moment (was " + layer + ")");
         }
         if (side == null) throw new NullPointerException("side");
         this.layer = layer;
@@ -26,7 +39,7 @@ public abstract class PluggableModelKey {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         PluggableModelKey other = (PluggableModelKey) obj;
-        if (layer != other.layer) return false;
+        if (!layer.equals(other.layer)) return false;
         if (side != other.side) return false;
         return true;
     }

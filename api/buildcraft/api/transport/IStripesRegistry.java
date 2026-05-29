@@ -1,9 +1,16 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import buildcraft.api.core.EnumHandlerPriority;
@@ -27,15 +34,15 @@ public interface IStripesRegistry {
      * @return True if a handler handled the itemstack, false otherwise (and so nothing has been done) */
     boolean handleItem(World world,
                        BlockPos pos,
-                       EnumFacing direction,
+                       Direction direction,
                        ItemStack stack,
-                       EntityPlayer player,
+                       PlayerEntity player,
                        IStripesActivator activator);
 
     /** @return True if a handler broke a block, false otherwise (and so nothing has been done) */
     boolean handleBlock(World world,
                         BlockPos pos,
-                        EnumFacing direction,
-                        EntityPlayer player,
+                        Direction direction,
+                        PlayerEntity player,
                         IStripesActivator activator);
 }

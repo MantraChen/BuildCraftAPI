@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.transport.pipe;
 
 import java.util.IdentityHashMap;
@@ -5,9 +12,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import net.minecraftforge.common.capabilities.Capability;
-
-import buildcraft.api.core.CapabilitiesHelper;
 import buildcraft.api.mj.MjAPI;
 import buildcraft.api.transport.IInjectable;
 import buildcraft.api.transport.IStripesRegistry;
@@ -26,33 +30,33 @@ public final class PipeApi {
     public static PipeFlowType flowPower;
     public static PipeFlowType flowRf;
 
-    /** The default transfer information used if a pipe definition has not been registered. Note that this is replaced
-     * by BuildCraft Transport to config-defined values. */
+    /** The default transfer information used if a pipe definition has not been registered. */
     public static FluidTransferInfo fluidInfoDefault = new FluidTransferInfo(20, 10);
 
-    /** The default transfer information used if a pipe definition has not been registered. Note that this is replaced
-     * by BuildCraft Transport to config-defined values. */
-    public static PowerTransferInfo powerInfoDefault = PowerTransferInfo.createFromResistance(8 * MjAPI.MJ, MjAPI.MJ / 32, false);
+    /** The default transfer information used if a pipe definition has not been registered. */
+    public static PowerTransferInfo powerInfoDefault = PowerTransferInfo.createFromResistance(8 * MjAPI.MJ,
+        MjAPI.MJ / 32, false);
 
-    /** The default transfer information used if a pipe definition has not been registered. Note that this is replaced
-     * by BuildCraft Transport to config-defined values. */
+    /** The default transfer information used if a pipe definition has not been registered. */
     public static RedstoneFluxTransferInfo rfInfoDefault = new RedstoneFluxTransferInfo(80, false);
 
     public static final Map<PipeDefinition, FluidTransferInfo> fluidTransferData = new IdentityHashMap<>();
     public static final Map<PipeDefinition, PowerTransferInfo> powerTransferData = new IdentityHashMap<>();
     public static final Map<PipeDefinition, RedstoneFluxTransferInfo> rfTransferData = new IdentityHashMap<>();
 
+    // STUB(R.Chen): Forge Capability<T> fields replaced with Object stubs.
+    // Restore as Fabric API Lookup objects in Phase 4E.
     @Nonnull
-    public static final Capability<IPipeHolder> CAP_PIPE_HOLDER;
+    public static final Object CAP_PIPE_HOLDER;
 
     @Nonnull
-    public static final Capability<IPipe> CAP_PIPE;
+    public static final Object CAP_PIPE;
 
     @Nonnull
-    public static final Capability<PipePluggable> CAP_PLUG;
+    public static final Object CAP_PLUG;
 
     @Nonnull
-    public static final Capability<IInjectable> CAP_INJECTABLE;
+    public static final Object CAP_INJECTABLE;
 
     public static FluidTransferInfo getFluidTransferInfo(PipeDefinition def) {
         FluidTransferInfo info = fluidTransferData.get(def);
@@ -82,13 +86,7 @@ public final class PipeApi {
     }
 
     public static class FluidTransferInfo {
-        /** Controls the maximum amount of fluid that can be transferred around and out of a pipe per tick. Note that
-         * this does not affect the flow rate coming into the pipe. */
         public final int transferPerTick;
-
-        /** Controls how long the pipe should delay incoming fluids by. Minimum value is 1, because of the way that
-         * fluids are handled internally. This value is multiplied by the fluids viscosity, and divided by 100 to give
-         * the actual delay. */
         public final double transferDelayMultiplier;
 
         public FluidTransferInfo(int transferPerTick, int transferDelay) {
@@ -107,22 +105,15 @@ public final class PipeApi {
         public final long resistancePerTick;
         public final boolean isReceiver;
 
-        /** Sets resistancePerTick to be equal to lossPerTick when full power is being transferred, scaling down to 0.
-         * 
-         * @param transferPerTick
-         * @param lossPerTick
-         * @param isReceiver */
         public static PowerTransferInfo createFromLoss(long transferPerTick, long lossPerTick, boolean isReceiver) {
-            return new PowerTransferInfo(transferPerTick, lossPerTick, lossPerTick * MjAPI.MJ / transferPerTick, isReceiver);
+            return new PowerTransferInfo(transferPerTick, lossPerTick,
+                lossPerTick * MjAPI.MJ / transferPerTick, isReceiver);
         }
 
-        /** Sets lossPerTick to be equal to resistancePerTick when full power is being transferred.
-         * 
-         * @param transferPerTick
-         * @param resistancePerTick
-         * @param isReceiver */
-        public static PowerTransferInfo createFromResistance(long transferPerTick, long resistancePerTick, boolean isReceiver) {
-            return new PowerTransferInfo(transferPerTick, resistancePerTick, resistancePerTick * transferPerTick / MjAPI.MJ, isReceiver);
+        public static PowerTransferInfo createFromResistance(long transferPerTick, long resistancePerTick,
+            boolean isReceiver) {
+            return new PowerTransferInfo(transferPerTick, resistancePerTick,
+                resistancePerTick * transferPerTick / MjAPI.MJ, isReceiver);
         }
 
         public PowerTransferInfo(long transferPerTick, long lossPerTick, long resistancePerTick, boolean isReceiver) {
@@ -146,12 +137,12 @@ public final class PipeApi {
         }
     }
 
-    // Internals
-
+    // STUB(R.Chen): Forge CapabilitiesHelper.registerCapability replaced with null stubs.
+    // Restore as Fabric API ComponentRegistry lookups in Phase 4E.
     static {
-        CAP_PIPE = CapabilitiesHelper.registerCapability(IPipe.class);
-        CAP_PLUG = CapabilitiesHelper.registerCapability(PipePluggable.class);
-        CAP_PIPE_HOLDER = CapabilitiesHelper.registerCapability(IPipeHolder.class);
-        CAP_INJECTABLE = CapabilitiesHelper.registerCapability(IInjectable.class);
+        CAP_PIPE = null;
+        CAP_PLUG = null;
+        CAP_PIPE_HOLDER = null;
+        CAP_INJECTABLE = null;
     }
 }

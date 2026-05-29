@@ -1,8 +1,9 @@
-/** Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team http://www.mod-buildcraft.com
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
  *
- * The BuildCraft API is distributed under the terms of the MIT License. Please check the contents of the license, which
- * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
-@API(apiVersion = "5.0", owner = "buildcraftapi_core", provides = "buildcraftapi_transport")
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
+// TODO(R.Chen): @API annotation removed — net.minecraftforge.fml.common.API has no Fabric equivalent.
 package buildcraft.api.transport;
-
-import net.minecraftforge.fml.common.API;

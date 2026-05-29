@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.statements;
 
 import java.util.List;
@@ -6,25 +13,19 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 import buildcraft.api.core.IConvertable;
 import buildcraft.api.core.render.ISprite;
 
 public interface IGuiSlot extends IConvertable {
-    /** Every statement needs a unique tag, it should be in the format of "&lt;modid&gt;:&lt;name&gt;".
-     *
-     * @return the unique id */
     String getUniqueTag();
 
-    /** Return the description in the UI. Note that this should NEVER be called directly, instead this acts as a bridge
-     * for {@link #getTooltip()}. (As such this might return null or throw an exception) */
-    @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     String getDescription();
 
-    /** @return The full tooltip for the UI. */
-    @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     default List<String> getTooltip() {
         String desc = getDescription();
         if (desc == null) {
@@ -33,8 +34,7 @@ public interface IGuiSlot extends IConvertable {
         return ImmutableList.of(desc);
     }
 
-    /** @return A sprite to show in a GUI, or null if this should not render a sprite. */
-    @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     @Nullable
     ISprite getSprite();
 }
