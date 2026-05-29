@@ -1,21 +1,24 @@
-/** Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team http://www.mod-buildcraft.com
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
  *
- * The BuildCraft API is distributed under the terms of the MIT License. Please check the contents of the license, which
- * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.statements;
 
 import java.util.Collection;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.util.math.Direction;
 
 public interface ITriggerProvider {
     void addInternalTriggers(Collection<ITriggerInternal> triggers, IStatementContainer container);
 
-    void addInternalSidedTriggers(Collection<ITriggerInternalSided> triggers, IStatementContainer container, @Nonnull EnumFacing side);
+    void addInternalSidedTriggers(Collection<ITriggerInternalSided> triggers, IStatementContainer container, @Nonnull Direction side);
 
     /** Returns the list of triggers available to a gate next to the given block. */
-    void addExternalTriggers(Collection<ITriggerExternal> triggers, @Nonnull EnumFacing side, TileEntity tile);
+    void addExternalTriggers(Collection<ITriggerExternal> triggers, @Nonnull Direction side, BlockEntity tile);
 }

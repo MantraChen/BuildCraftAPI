@@ -1,9 +1,13 @@
-/** Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team http://www.mod-buildcraft.com
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
  *
- * The BuildCraft API is distributed under the terms of the MIT License. Please check the contents of the license, which
- * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.statements;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,13 +15,14 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
 
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import buildcraft.api.core.render.ISprite;
 
@@ -47,8 +52,8 @@ public class StatementParameterItemStack implements IStatementParameter {
         this.stack = stack;
     }
 
-    public StatementParameterItemStack(NBTTagCompound nbt) {
-        ItemStack read = new ItemStack(nbt.getCompoundTag("stack"));
+    public StatementParameterItemStack(NbtCompound nbt) {
+        ItemStack read = ItemStack.fromNbt(nbt.getCompound("stack"));
         if (read.isEmpty()) {
             stack = EMPTY_STACK;
         } else {
@@ -57,11 +62,11 @@ public class StatementParameterItemStack implements IStatementParameter {
     }
 
     @Override
-    public void writeToNbt(NBTTagCompound compound) {
+    public void writeToNbt(NbtCompound compound) {
         if (!stack.isEmpty()) {
-            NBTTagCompound tagCompound = new NBTTagCompound();
-            stack.writeToNBT(tagCompound);
-            compound.setTag("stack", tagCompound);
+            NbtCompound tagCompound = new NbtCompound();
+            stack.writeNbt(tagCompound);
+            compound.put("stack", tagCompound);
         }
     }
 
@@ -93,9 +98,7 @@ public class StatementParameterItemStack implements IStatementParameter {
     public boolean equals(Object object) {
         if (object instanceof StatementParameterItemStack) {
             StatementParameterItemStack param = (StatementParameterItemStack) object;
-
-            return ItemStack.areItemStacksEqual(stack, param.stack)
-            && ItemStack.areItemStackTagsEqual(stack, param.stack);
+            return ItemStack.areEqual(stack, param.stack);
         } else {
             return false;
         }
@@ -107,22 +110,26 @@ public class StatementParameterItemStack implements IStatementParameter {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public String getDescription() {
         throw new UnsupportedOperationException("Don't call getDescription directly!");
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public List<String> getTooltip() {
         if (stack.isEmpty()) {
             return ImmutableList.of();
         }
-        List<String> tooltip = stack.getTooltip(null, ITooltipFlag.TooltipFlags.NORMAL);
+        List<Text> raw = stack.getTooltip(null, TooltipContext.Default.BASIC);
+        List<String> tooltip = new ArrayList<>(raw.size());
+        for (Text t : raw) {
+            tooltip.add(t.getString());
+        }
         if (!tooltip.isEmpty()) {
-            tooltip.set(0, stack.getRarity().rarityColor + tooltip.get(0));
+            tooltip.set(0, stack.getRarity().formatting.toString() + tooltip.get(0));
             for (int i = 1; i < tooltip.size(); i++) {
-                tooltip.set(i, TextFormatting.GRAY + tooltip.get(i));
+                tooltip.set(i, Formatting.GRAY + tooltip.get(i));
             }
         }
         return tooltip;

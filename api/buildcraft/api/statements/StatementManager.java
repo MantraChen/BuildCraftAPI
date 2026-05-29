@@ -1,7 +1,10 @@
-/** Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team http://www.mod-buildcraft.com
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
  *
- * The BuildCraft API is distributed under the terms of the MIT License. Please check the contents of the license, which
- * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.statements;
 
 import java.io.IOException;
@@ -12,10 +15,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.math.Direction;
 
 public final class StatementManager {
 
@@ -31,12 +34,12 @@ public final class StatementManager {
 
     @FunctionalInterface
     public interface IParameterReader {
-        IStatementParameter readFromNbt(NBTTagCompound nbt);
+        IStatementParameter readFromNbt(NbtCompound nbt);
     }
 
     @FunctionalInterface
     public interface IParamReaderBuf {
-        IStatementParameter readFromBuf(PacketBuffer buffer) throws IOException;
+        IStatementParameter readFromBuf(PacketByteBuf buffer) throws IOException;
     }
 
     /** Deactivate constructor */
@@ -59,11 +62,11 @@ public final class StatementManager {
     }
 
     public static void registerParameter(IParameterReader reader) {
-        registerParameter(reader, buf -> reader.readFromNbt(buf.readCompoundTag()));
+        registerParameter(reader, buf -> reader.readFromNbt(buf.readNbt()));
     }
 
     public static void registerParameter(IParameterReader reader, IParamReaderBuf bufReader) {
-        String name = reader.readFromNbt(new NBTTagCompound()).getUniqueTag();
+        String name = reader.readFromNbt(new NbtCompound()).getUniqueTag();
         registerParameter(name, reader);
         registerParameter(name, bufReader);
     }
@@ -76,7 +79,7 @@ public final class StatementManager {
         paramsBuf.put(name, reader);
     }
 
-    public static List<ITriggerExternal> getExternalTriggers(EnumFacing side, TileEntity entity) {
+    public static List<ITriggerExternal> getExternalTriggers(Direction side, BlockEntity entity) {
         if (entity instanceof IOverrideDefaultStatements) {
             List<ITriggerExternal> result = ((IOverrideDefaultStatements) entity).overrideTriggers();
             if (result != null) {
@@ -93,7 +96,7 @@ public final class StatementManager {
         return new ArrayList<>(triggers);
     }
 
-    public static List<IActionExternal> getExternalActions(EnumFacing side, TileEntity entity) {
+    public static List<IActionExternal> getExternalActions(Direction side, BlockEntity entity) {
         if (entity instanceof IOverrideDefaultStatements) {
             List<IActionExternal> result = ((IOverrideDefaultStatements) entity).overrideActions();
             if (result != null) {
@@ -130,7 +133,7 @@ public final class StatementManager {
         return new ArrayList<>(actions);
     }
 
-    public static List<ITriggerInternalSided> getInternalSidedTriggers(IStatementContainer container, EnumFacing side) {
+    public static List<ITriggerInternalSided> getInternalSidedTriggers(IStatementContainer container, Direction side) {
         LinkedHashSet<ITriggerInternalSided> triggers = new LinkedHashSet<>();
 
         for (ITriggerProvider provider : triggerProviders) {
@@ -140,7 +143,7 @@ public final class StatementManager {
         return new ArrayList<>(triggers);
     }
 
-    public static List<IActionInternalSided> getInternalSidedActions(IStatementContainer container, EnumFacing side) {
+    public static List<IActionInternalSided> getInternalSidedActions(IStatementContainer container, Direction side) {
         LinkedHashSet<IActionInternalSided> actions = new LinkedHashSet<>();
 
         for (IActionProvider provider : actionProviders) {

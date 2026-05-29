@@ -9,10 +9,16 @@ package buildcraft.api.mj;
 
 import java.text.DecimalFormat;
 
+import javax.annotation.Nullable;
+
 // STUB(R.Chen): Forge Capability fields (CAP_CONNECTOR, CAP_RECEIVER, etc.) and the RF-conversion API
 // (CapabilitiesHelper, IMjToRfStatus) are removed. Transfer API lookups will replace them.
 // Only MJ constant, formatMj(), and isRfAutoConversionEnabled() are preserved for compile compatibility.
 public class MjAPI {
+
+    // TODO(R.Chen): wire up EFFECT_MANAGER on mod init (register via event or initializer).
+    @Nullable
+    public static IMjEffectManager EFFECT_MANAGER = null;
 
     /** 1 MJ expressed in micro-joules (the power system base unit). */
     public static final long ONE_MINECRAFT_JOULE = 1_000_000L;
