@@ -2,22 +2,23 @@ package buildcraft.api.tiles;
 
 import java.util.List;
 
-import net.minecraft.util.EnumFacing;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.math.Direction;
 
+// Ported to Fabric 1.20.1 by R.Chen: EnumFacing → Direction, @SideOnly → @Environment.
 public interface IDebuggable {
     /** Get the debug information from a tile entity as a list of strings, used for the F3 debug menu. The left and
      * right parameters correspond to the sides of the F3 screen.
-     * 
-     * @param side The side the block was clicked on, may be null if we don't know, or is the "centre" side */
-    void getDebugInfo(List<String> left, List<String> right, EnumFacing side);
-
-    /** Same as {@link #getDebugInfo(List, List, EnumFacing)}, but only for client
      *
-     * @param side same as for {@link #getDebugInfo(List, List, EnumFacing)} */
-    @SideOnly(Side.CLIENT)
-    default void getClientDebugInfo(List<String> left, List<String> right, EnumFacing side) {
+     * @param side The side the block was clicked on, may be null if we don't know, or is the "centre" side */
+    void getDebugInfo(List<String> left, List<String> right, Direction side);
+
+    /** Same as {@link #getDebugInfo(List, List, Direction)}, but only for client
+     *
+     * @param side same as for {@link #getDebugInfo(List, List, Direction)} */
+    @Environment(EnvType.CLIENT)
+    default void getClientDebugInfo(List<String> left, List<String> right, Direction side) {
     }
 }

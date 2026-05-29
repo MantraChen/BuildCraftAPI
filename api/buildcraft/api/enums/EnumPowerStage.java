@@ -2,9 +2,10 @@ package buildcraft.api.enums;
 
 import java.util.Locale;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringIdentifiable;
 
-public enum EnumPowerStage implements IStringSerializable {
+// Ported to Fabric 1.20.1 by R.Chen: IStringSerializable → StringIdentifiable, getName() → asString().
+public enum EnumPowerStage implements StringIdentifiable {
     BLUE,
     GREEN,
     YELLOW,
@@ -21,7 +22,7 @@ public enum EnumPowerStage implements IStringSerializable {
     }
 
     @Override
-    public String getName() {
+    public String asString() {
         return getModelName();
     }
 }
