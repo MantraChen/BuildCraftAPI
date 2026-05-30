@@ -7,8 +7,9 @@
  */
 package buildcraft.api.transport.pluggable;
 
-import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.util.math.MatrixStack;
 
 public interface IPlugDynamicRenderer<P extends PipePluggable> {
-    void render(P plug, double x, double y, double z, float partialTicks, BufferBuilder bb);
+    void render(P plug, MatrixStack matrices, VertexConsumer vertexConsumer, int light, float partialTicks);
 }

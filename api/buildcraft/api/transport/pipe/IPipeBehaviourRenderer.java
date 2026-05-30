@@ -10,9 +10,10 @@ package buildcraft.api.transport.pipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.util.math.MatrixStack;
 
 @Environment(EnvType.CLIENT)
 public interface IPipeBehaviourRenderer<B extends PipeBehaviour> {
-    void render(B behaviour, double x, double y, double z, float partialTicks, BufferBuilder bb);
+    void render(B behaviour, MatrixStack matrices, VertexConsumer vertexConsumer, int light, float partialTicks);
 }
