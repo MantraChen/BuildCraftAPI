@@ -1,12 +1,21 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ *
+ * Ported to Fabric 1.20.1 by R.Chen (https://github.com/MantraChen).
+ */
 package buildcraft.api.inventory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.collection.DefaultedList;
 
 import buildcraft.api.core.IStackFilter;
+
+// Ported to Fabric 1.20.1 by R.Chen: NonNullList → DefaultedList (NonNullList.create() → DefaultedList.of()).
 
 /** A simple way to define something that deals with item insertion and extraction, without caring about slots. */
 public interface IItemTransactor {
@@ -23,8 +32,8 @@ public interface IItemTransactor {
      * @param stacks The stacks to insert. Must not be null!
      * @param simulate If true then the in-world state of this will not be changed.
      * @return The overflow stacks. Will be an empty list if all of it was accepted. */
-    default NonNullList<ItemStack> insert(NonNullList<ItemStack> stacks, boolean simulate) {
-        NonNullList<ItemStack> leftOver = NonNullList.create();
+    default DefaultedList<ItemStack> insert(DefaultedList<ItemStack> stacks, boolean simulate) {
+        DefaultedList<ItemStack> leftOver = DefaultedList.of();
         for (ItemStack stack : stacks) {
             ItemStack leftOverStack = insert(stack, false, simulate);
             if (!leftOverStack.isEmpty()) {
