@@ -1,14 +1,14 @@
 /** Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team http://www.mod-buildcraft.com
  *
- * BuildCraft is distributed under the terms of the Minecraft Mod Public License 1.0, or MMPL. Please check the contents
+ * BuildCraft is distributed under the terms of the MinecraftClient Mod Public License 1.0, or MMPL. Please check the contents
  * of the license located in http://www.mod-buildcraft.com/MMPL-1.0.txt */
 package buildcraft.api.robots;
 
 import java.util.Arrays;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -20,7 +20,7 @@ import buildcraft.api.statements.StatementSlot;
 import buildcraft.api.transport.IInjectable;
 
 public abstract class DockingStation {
-    public EnumFacing side;
+    public Direction side;
     public World world;
 
     private long robotTakingId = EntityRobotBase.NULL_ROBOT_ID;
@@ -30,7 +30,7 @@ public abstract class DockingStation {
 
     private BlockPos pos;
 
-    public DockingStation(BlockPos iIndex, EnumFacing iSide) {
+    public DockingStation(BlockPos iIndex, Direction iSide) {
         pos = iIndex;
         side = iSide;
     }
@@ -45,7 +45,7 @@ public abstract class DockingStation {
         return pos;
     }
 
-    public EnumFacing side() {
+    public Direction side() {
         return side;
     }
 
@@ -116,20 +116,20 @@ public abstract class DockingStation {
         }
     }
 
-    public void writeToNBT(NBTTagCompound nbt) {
-        nbt.setIntArray("pos", new int[] { getPos().getX(), getPos().getY(), getPos().getZ() });
-        nbt.setByte("side", (byte) side.ordinal());
-        nbt.setBoolean("isMain", linkIsMain);
-        nbt.setLong("robotId", robotTakingId);
+    public void writeToNBT(NbtCompound nbt) {
+        nbt.putIntArray("pos", new int[] { getPos().getX(), getPos().getY(), getPos().getZ() });
+        nbt.putByte("side", (byte) side.ordinal());
+        nbt.putBoolean("isMain", linkIsMain);
+        nbt.putLong("robotId", robotTakingId);
     }
 
-    public void readFromNBT(NBTTagCompound nbt) {
-        if (nbt.hasKey("index")) {
+    public void readFromNBT(NbtCompound nbt) {
+        if (nbt.contains("index")) {
             // For compatibility with older versions of minecraft and buildcraft
-            NBTTagCompound indexNBT = nbt.getCompoundTag("index");
-            int x = indexNBT.getInteger("i");
-            int y = indexNBT.getInteger("j");
-            int z = indexNBT.getInteger("k");
+            NbtCompound indexNBT = nbt.getCompound("index");
+            int x = indexNBT.getInt("i");
+            int y = indexNBT.getInt("j");
+            int z = indexNBT.getInt("k");
             pos = new BlockPos(x, y, z);
         } else {
             int[] array = nbt.getIntArray("pos");
@@ -141,7 +141,7 @@ public abstract class DockingStation {
                 BCLog.logger.warn("Did not find any integer positions! This is a bug!");
             }
         }
-        side = EnumFacing.values()[nbt.getByte("side")];
+        side = Direction.values()[nbt.getByte("side")];
         linkIsMain = nbt.getBoolean("isMain");
         robotTakingId = nbt.getLong("robotId");
     }

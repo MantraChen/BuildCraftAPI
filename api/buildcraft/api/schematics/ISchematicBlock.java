@@ -7,12 +7,12 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Rotation;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fluids.FluidStack;
+import buildcraft.lib.compat.FluidStackBC;
 
 import buildcraft.api.core.InvalidInputDataException;
 
@@ -34,11 +34,11 @@ public interface ISchematicBlock {
     }
 
     @Nonnull
-    default List<FluidStack> computeRequiredFluids() {
+    default List<FluidStackBC> computeRequiredFluids() {
         return Collections.emptyList();
     }
 
-    ISchematicBlock getRotated(Rotation rotation);
+    ISchematicBlock getRotated(BlockRotation rotation);
 
     boolean canBuild(World world, BlockPos blockPos);
 
@@ -52,8 +52,8 @@ public interface ISchematicBlock {
 
     boolean isBuilt(World world, BlockPos blockPos);
 
-    NBTTagCompound serializeNBT();
+    NbtCompound serializeNBT();
 
     /** @throws InvalidInputDataException If the input data wasn't correct or didn't make sense. */
-    void deserializeNBT(NBTTagCompound nbt) throws InvalidInputDataException;
+    void deserializeNBT(NbtCompound nbt) throws InvalidInputDataException;
 }

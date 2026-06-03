@@ -19,7 +19,7 @@ public interface ILaserTarget {
 
     /** Transfers power from the laser to the target.
      *
-     * @param microJoules The number of micro Minecraft Joules to accept
+     * @param microJoules The number of micro MinecraftClient Joules to accept
      * @return The excess power. If the input is less than or equal to {@link #getRequiredLaserPower()} then this will return 0. */
     long receiveLaserPower(long microJoules);
 

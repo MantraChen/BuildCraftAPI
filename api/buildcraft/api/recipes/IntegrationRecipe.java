@@ -5,13 +5,13 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.Identifier;
 
 public abstract class IntegrationRecipe {
-    public final ResourceLocation name;
+    public final Identifier name;
 
-    public IntegrationRecipe(ResourceLocation name) {
+    public IntegrationRecipe(Identifier name) {
         this.name = name;
     }
 
@@ -21,7 +21,7 @@ public abstract class IntegrationRecipe {
      * @param toIntegrate All available stacks to integrate (not all have to be used up in this recipe)
      * @return The output to produce based on the inputs provided or an empty stack if the recipe isn't valid
      */
-    public abstract ItemStack getOutput(@Nonnull ItemStack target, NonNullList<ItemStack> toIntegrate);
+    public abstract ItemStack getOutput(@Nonnull ItemStack target, DefaultedList<ItemStack> toIntegrate);
 
     /**
      * Determines the components to use when crafting finishes

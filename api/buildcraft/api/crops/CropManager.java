@@ -3,12 +3,12 @@ package buildcraft.api.crops;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public final class CropManager {
@@ -52,7 +52,7 @@ public final class CropManager {
     /** Attempts to plant the crop given by the seed into the world. Also checks to make sure that
      * {@link ICropHandler#isSeed(ItemStack)} is true, and
      * {@link ICropHandler#canSustainPlant(World, ItemStack, BlockPos)} is true for the position. */
-    public static boolean plantCrop(World world, EntityPlayer player, ItemStack seed, BlockPos pos) {
+    public static boolean plantCrop(World world, PlayerEntity player, ItemStack seed, BlockPos pos) {
         for (ICropHandler cropHandler : handlers) {
             if (cropHandler.isSeed(seed) && cropHandler.canSustainPlant(world, seed, pos) && cropHandler.plantCrop(world, player, seed, pos)) {
                 return true;
@@ -64,7 +64,7 @@ public final class CropManager {
         return false;
     }
 
-    public static boolean isMature(IBlockAccess blockAccess, IBlockState state, BlockPos pos) {
+    public static boolean isMature(BlockView blockAccess, BlockState state, BlockPos pos) {
         for (ICropHandler cropHandler : handlers) {
             if (cropHandler.isMature(blockAccess, state, pos)) {
                 return true;
@@ -73,8 +73,8 @@ public final class CropManager {
         return defaultHandler.isMature(blockAccess, state, pos);
     }
 
-    public static boolean harvestCrop(World world, BlockPos pos, NonNullList<ItemStack> drops) {
-        IBlockState state = world.getBlockState(pos);
+    public static boolean harvestCrop(World world, BlockPos pos, DefaultedList<ItemStack> drops) {
+        BlockState state = world.getBlockState(pos);
         for (ICropHandler cropHandler : handlers) {
             if (cropHandler.isMature(world, state, pos)) {
                 return cropHandler.harvestCrop(world, pos, drops);

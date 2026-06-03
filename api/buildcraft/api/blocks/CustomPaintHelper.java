@@ -9,10 +9,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.DyeColor;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -43,11 +43,11 @@ public enum CustomPaintHelper {
 
     /** Register's a paint handler for every class of a given block. */
     public void registerHandlerForAll(Class<? extends Block> blockClass, ICustomPaintHandler handler) {
-        for (Block block : Block.REGISTRY) {
+        for (Block block : net.minecraft.registry.Registries.BLOCK) {
             Class<? extends Block> foundClass = block.getClass();
             if (blockClass.isAssignableFrom(foundClass)) {
                 if (DEBUG) {
-                    BCLog.logger.info("[api.painting] Found an assignable block " + block.getRegistryName() + " (" + foundClass + ") for " + blockClass);
+                    BCLog.logger.info("[api.painting] Found an assignable block " + net.minecraft.registry.Registries.BLOCK.getId(block) + " (" + foundClass + ") for " + blockClass);
                 }
                 registerHandlerInternal(block, handler);
             }
@@ -57,10 +57,10 @@ public enum CustomPaintHelper {
     public void registerHandler(Block block, ICustomPaintHandler handler) {
         if (registerHandlerInternal(block, handler)) {
             if (DEBUG) {
-                BCLog.logger.info("[api.painting] Setting a paint handler for block " + block.getRegistryName() + "(" + handler.getClass() + ")");
+                BCLog.logger.info("[api.painting] Setting a paint handler for block " + net.minecraft.registry.Registries.BLOCK.getId(block) + "(" + handler.getClass() + ")");
             }
         } else if (DEBUG) {
-            BCLog.logger.info("[api.painting] Adding another paint handler for block " + block.getRegistryName() + "(" + handler.getClass() + ")");
+            BCLog.logger.info("[api.painting] Adding another paint handler for block " + net.minecraft.registry.Registries.BLOCK.getId(block) + "(" + handler.getClass() + ")");
         }
     }
 
@@ -77,7 +77,7 @@ public enum CustomPaintHelper {
     }
 
     /** Attempts to paint a block at the given position. Basically iterates through all registered paint handlers. */
-    public EnumActionResult attemptPaintBlock(World world, BlockPos pos, IBlockState state, Vec3d hitPos, @Nullable EnumFacing hitSide, @Nullable EnumDyeColor paint) {
+    public ActionResult attemptPaintBlock(World world, BlockPos pos, BlockState state, Vec3d hitPos, @Nullable Direction hitSide, @Nullable DyeColor paint) {
         Block block = state.getBlock();
         if (block instanceof ICustomPaintHandler) {
             return ((ICustomPaintHandler) block).attemptPaint(world, pos, state, hitPos, hitSide, paint);
@@ -87,29 +87,30 @@ public enum CustomPaintHelper {
             return defaultAttemptPaint(world, pos, state, hitPos, hitSide, paint);
         }
         for (ICustomPaintHandler handler : custom) {
-            EnumActionResult result = handler.attemptPaint(world, pos, state, hitPos, hitSide, paint);
-            if (result != EnumActionResult.PASS) {
+            ActionResult result = handler.attemptPaint(world, pos, state, hitPos, hitSide, paint);
+            if (result != ActionResult.PASS) {
                 return result;
             }
         }
         return defaultAttemptPaint(world, pos, state, hitPos, hitSide, paint);
     }
 
-    private EnumActionResult defaultAttemptPaint(World world, BlockPos pos, IBlockState state, Vec3d hitPos, EnumFacing hitSide, @Nullable EnumDyeColor paint) {
+    private ActionResult defaultAttemptPaint(World world, BlockPos pos, BlockState state, Vec3d hitPos, Direction hitSide, @Nullable DyeColor paint) {
         for (ICustomPaintHandler handler : allHandlers) {
-            EnumActionResult result = handler.attemptPaint(world, pos, state, hitPos, hitSide, paint);
-            if (result != EnumActionResult.PASS) {
+            ActionResult result = handler.attemptPaint(world, pos, state, hitPos, hitSide, paint);
+            if (result != ActionResult.PASS) {
                 return result;
             }
         }
         if (paint == null) {
-            return EnumActionResult.FAIL;
+            return ActionResult.FAIL;
         }
         Block b = state.getBlock();
-        if (b.recolorBlock(world, pos, hitSide, paint)) {
-            return EnumActionResult.SUCCESS;
+        // STUB(R.Chen): Forge Block.recolorBlock removed in Fabric 1.20.1 — recolouring deferred, Phase 10
+        if (false) {
+            return ActionResult.SUCCESS;
         } else {
-            return EnumActionResult.FAIL;
+            return ActionResult.FAIL;
         }
     }
 }

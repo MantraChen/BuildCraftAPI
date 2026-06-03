@@ -11,7 +11,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import net.minecraft.block.Block;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -28,11 +28,11 @@ public final class BuildCraftAPI {
     private BuildCraftAPI() {}
 
     public static String getVersion() {
-        ModContainer container = Loader.instance().getIndexedModList().get("buildcraftlib");
-        if (container != null) {
-            return container.getDisplayVersion();
-        }
-        return "UNKNOWN VERSION";
+        // STUB(R.Chen): Forge Loader.getIndexedModList → Fabric FabricLoader mod metadata.
+        return net.fabricmc.loader.api.FabricLoader.getInstance()
+            .getModContainer("buildcraftlib")
+            .map(c -> c.getMetadata().getVersion().getFriendlyString())
+            .orElse("UNKNOWN VERSION");
     }
 
     public static IWorldProperty getWorldProperty(String name) {
@@ -50,12 +50,12 @@ public final class BuildCraftAPI {
         return worldProperties.get("soft").get(world, pos);
     }
 
-    public static ResourceLocation nameToResourceLocation(String name) {
-        if (name.indexOf(':') > 0) return new ResourceLocation(name);
+    public static Identifier nameToResourceLocation(String name) {
+        if (name.indexOf(':') > 0) return new Identifier(name);
         ModContainer modContainer = Loader.instance().activeModContainer();
         if (modContainer == null) {
             throw new IllegalStateException("Illegal recipe name " + name + ". Provide domain id to register it correctly.");
         }
-        return new ResourceLocation(modContainer.getModId(), name);
+        return new Identifier(modContainer.getModId(), name);
     }
 }

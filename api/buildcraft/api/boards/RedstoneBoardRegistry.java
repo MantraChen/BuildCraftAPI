@@ -6,7 +6,7 @@ package buildcraft.api.boards;
 
 import java.util.Collection;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NbtCompound;
 
 public abstract class RedstoneBoardRegistry {
 
@@ -22,7 +22,7 @@ public abstract class RedstoneBoardRegistry {
 
     public abstract RedstoneBoardRobotNBT getEmptyRobotBoard();
 
-    public abstract RedstoneBoardNBT<?> getRedstoneBoard(NBTTagCompound nbt);
+    public abstract RedstoneBoardNBT<?> getRedstoneBoard(NbtCompound nbt);
 
     public abstract RedstoneBoardNBT<?> getRedstoneBoard(String id);
 

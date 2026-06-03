@@ -11,8 +11,9 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
-import net.minecraft.entity.EntityList;
-import net.minecraft.util.ResourceLocation;
+// STUB(R.Chen): net.minecraft.entity.EntityList → Registries.ENTITY_TYPE in Yarn 1.20.1
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 
 import buildcraft.api.core.BuildCraftAPI;
 
@@ -33,12 +34,12 @@ public class SchematicEntityFactoryRegistry {
 
     public static <S extends ISchematicEntity> void registerFactory(String name,
                                                                     int priority,
-                                                                    List<ResourceLocation> entities,
+                                                                    List<Identifier> entities,
                                                                     Supplier<S> supplier) {
         registerFactory(
             name,
             priority,
-            context -> entities.contains(EntityList.getKey(context.entity)),
+            context -> entities.contains(Registries.ENTITY_TYPE.getId(context.entity.getType())),
             supplier
         );
     }
@@ -57,7 +58,7 @@ public class SchematicEntityFactoryRegistry {
     }
 
     @Nullable
-    public static SchematicEntityFactory<?> getFactoryByName(ResourceLocation name) {
+    public static SchematicEntityFactory<?> getFactoryByName(Identifier name) {
         return FACTORIES.stream()
             .filter(schematicEntityFactory -> schematicEntityFactory.name.equals(name))
             .findFirst()

@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BlockPos;
 
 import buildcraft.api.core.IBox;
@@ -25,7 +25,7 @@ public interface IMapLocation extends INamedItem {
         public final int meta = ordinal();
 
         public static MapLocationType getFromStack(@Nonnull ItemStack stack) {
-            int dam = stack.getItemDamage();
+            int dam = stack.getDamage();
             if (dam < 0 || dam >= values().length) {
                 return MapLocationType.CLEAN;
             }
@@ -33,7 +33,7 @@ public interface IMapLocation extends INamedItem {
         }
 
         public void setToStack(@Nonnull ItemStack stack) {
-            stack.setItemDamage(meta);
+            stack.setDamage(meta);
         }
     }
 
@@ -65,5 +65,5 @@ public interface IMapLocation extends INamedItem {
      * 
      * @param stack
      * @return The side of the spot. */
-    EnumFacing getPointSide(@Nonnull ItemStack stack);
+    Direction getPointSide(@Nonnull ItemStack stack);
 }

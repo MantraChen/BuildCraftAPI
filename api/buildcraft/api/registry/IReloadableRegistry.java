@@ -3,7 +3,7 @@ package buildcraft.api.registry;
 import java.util.Collection;
 import java.util.Map;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 /** A registry of any Java object. This does not perform serialisation of any kind to the entries. */
 public interface IReloadableRegistry<E> {
@@ -33,7 +33,7 @@ public interface IReloadableRegistry<E> {
     Collection<E> getPermanent();
 
     /** @return A map of all the reloadable entries, mapped from name to value. */
-    Map<ResourceLocation, E> getReloadableEntryMap();
+    Map<Identifier, E> getReloadableEntryMap();
 
     /** @return An iterable that has both {@link #getPermanent()} and
      *         {@link #getReloadableEntryMap()}.{@link Map#values() values()}. */

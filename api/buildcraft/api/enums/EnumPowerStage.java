@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import net.minecraft.util.StringIdentifiable;
 
-// Ported to Fabric 1.20.1 by R.Chen: IStringSerializable → StringIdentifiable, getName() → asString().
+// Ported to Fabric 1.20.1 by R.Chen: StringIdentifiable → StringIdentifiable, getName() → asString().
 public enum EnumPowerStage implements StringIdentifiable {
     BLUE,
     GREEN,

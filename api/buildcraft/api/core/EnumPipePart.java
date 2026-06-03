@@ -18,8 +18,8 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.util.math.Direction;
 
-// STUB(R.Chen): IStringSerializable removed (Forge-only); getName() kept as a plain method.
-// Yarn renames: EnumFacing → Direction, NBTBase → NbtElement, NBTTagString → NbtString, NBTPrimitive → NbtByte.
+// STUB(R.Chen): StringIdentifiable removed (Forge-only); getName() kept as a plain method.
+// Yarn renames: Direction → Direction, NbtElement → NbtElement, NbtString → NbtString, NBTPrimitive → NbtByte.
 public enum EnumPipePart {
     DOWN(Direction.DOWN),
     UP(Direction.UP),

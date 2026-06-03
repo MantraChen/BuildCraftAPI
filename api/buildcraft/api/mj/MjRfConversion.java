@@ -35,7 +35,7 @@ public class MjRfConversion {
         }
     }
 
-    /** @param mjPerRf Micro Minecraft Joules per 1 RF */
+    /** @param mjPerRf Micro MinecraftClient Joules per 1 RF */
     public static MjRfConversion createRaw(long mjPerRf) {
         return new MjRfConversion(mjPerRf);
     }

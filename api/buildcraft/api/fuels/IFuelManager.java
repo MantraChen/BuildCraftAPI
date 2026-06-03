@@ -6,32 +6,32 @@ package buildcraft.api.fuels;
 
 import java.util.Collection;
 
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraft.fluid.Fluid;
+import buildcraft.lib.compat.FluidStackBC;
 
 public interface IFuelManager {
     <F extends IFuel> F addFuel(F fuel);
 
-    IFuel addFuel(FluidStack fluid, long powerPerCycle, int totalBurningTime);
+    IFuel addFuel(FluidStackBC fluid, long powerPerCycle, int totalBurningTime);
 
     default IFuel addFuel(Fluid fluid, long powerPerCycle, int totalBurningTime) {
-        return addFuel(new FluidStack(fluid, 1), powerPerCycle, totalBurningTime);
+        return addFuel(new FluidStackBC(fluid, 1), powerPerCycle, totalBurningTime);
     }
 
     /** @param residue The residue fluidstack, per bucket of the original fuel. */
-    IDirtyFuel addDirtyFuel(FluidStack fuel, long powerPerCycle, int totalBurningTime, FluidStack residue);
+    IDirtyFuel addDirtyFuel(FluidStackBC fuel, long powerPerCycle, int totalBurningTime, FluidStackBC residue);
 
     /** @param residue The residue fluidstack, per bucket of the original fuel. */
-    default IDirtyFuel addDirtyFuel(Fluid fuel, long powerPerCycle, int totalBurningTime, FluidStack residue) {
-        return addDirtyFuel(new FluidStack(fuel, 1), powerPerCycle, totalBurningTime, residue);
+    default IDirtyFuel addDirtyFuel(Fluid fuel, long powerPerCycle, int totalBurningTime, FluidStackBC residue) {
+        return addDirtyFuel(new FluidStackBC(fuel, 1), powerPerCycle, totalBurningTime, residue);
     }
 
     Collection<IFuel> getFuels();
 
-    IFuel getFuel(FluidStack fluid);
+    IFuel getFuel(FluidStackBC fluid);
 
     interface IDirtyFuel extends IFuel {
         /** @return The residue fluidstack, per bucket of original fuel. */
-        FluidStack getResidue();
+        FluidStackBC getResidue();
     }
 }

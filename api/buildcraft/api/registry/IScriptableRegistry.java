@@ -10,7 +10,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 /** A type of {@link IReloadableRegistry} that can be configured with buildcraft style simple scripts. A full
  * description can be found [...] */
@@ -37,7 +37,7 @@ public interface IScriptableRegistry<E> extends IReloadableRegistry<E> {
     }
 
     /** @return A {@link Set} (likely unmodifiable) that contains all of the
-     *         {@link ResourceLocation#getResourceDomain()}'s that had added entries to this registry through
+     *         {@link Identifier#getResourceDomain()}'s that had added entries to this registry through
      *         scripts. */
     Set<String> getSourceDomains();
 
@@ -55,22 +55,22 @@ public interface IScriptableRegistry<E> extends IReloadableRegistry<E> {
          *         </ol>
          * @throws JsonSyntaxException if the input {@link JsonObject} was either missing required fields or had the
          *             wrong type or data for those fields. */
-        OptionallyDisabled<E> deserialize(ResourceLocation name, JsonObject obj, JsonDeserializationContext ctx)
+        OptionallyDisabled<E> deserialize(Identifier name, JsonObject obj, JsonDeserializationContext ctx)
             throws JsonSyntaxException;
     }
 
     /** Similar to {@link IEntryDeserializer} except that this guarantees that
-     * {@link IEntryDeserializer#deserialize(ResourceLocation, JsonObject, JsonDeserializationContext)} will never be
+     * {@link IEntryDeserializer#deserialize(Identifier, JsonObject, JsonDeserializationContext)} will never be
      * disabled. */
     @FunctionalInterface
     public interface ISimpleEntryDeserializer<E> extends IEntryDeserializer<E> {
 
-        /** Bridge method to {@link #deserializeConst(ResourceLocation, JsonObject, JsonDeserializationContext)}.
+        /** Bridge method to {@link #deserializeConst(Identifier, JsonObject, JsonDeserializationContext)}.
          * <p>
          * NOTE: Callers are free to assume that this method is never overridden, and so are free to call
-         * {@link #deserializeConst(ResourceLocation, JsonObject, JsonDeserializationContext)} directly. */
+         * {@link #deserializeConst(Identifier, JsonObject, JsonDeserializationContext)} directly. */
         @Override
-        default OptionallyDisabled<E> deserialize(ResourceLocation name, JsonObject obj, JsonDeserializationContext ctx)
+        default OptionallyDisabled<E> deserialize(Identifier name, JsonObject obj, JsonDeserializationContext ctx)
             throws JsonSyntaxException {
             return new OptionallyDisabled<>(deserializeConst(name, obj, ctx));
         }
@@ -81,7 +81,7 @@ public interface IScriptableRegistry<E> extends IReloadableRegistry<E> {
          * @return The deserialized entry.
          * @throws JsonSyntaxException if the input {@link JsonObject} was either missing required fields or had the
          *             wrong type or data for those fields. */
-        E deserializeConst(ResourceLocation name, JsonObject obj, JsonDeserializationContext ctx)
+        E deserializeConst(Identifier name, JsonObject obj, JsonDeserializationContext ctx)
             throws JsonSyntaxException;
     }
 

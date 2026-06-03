@@ -58,7 +58,7 @@ public abstract class PipeFlow {
     public void readPayload(int id, PacketByteBuf buffer, EnvType side) throws IOException {}
 
     public void sendPayload(int id) {
-        // STUB(R.Chen): world.isRemote → world.isClient
+        // STUB(R.Chen): world.isClient → world.isClient
         final EnvType side = pipe.getHolder().getPipeWorld().isClient ? EnvType.CLIENT : EnvType.SERVER;
         sendCustomPayload(id, (buf) -> writePayload(id, buf, side));
     }

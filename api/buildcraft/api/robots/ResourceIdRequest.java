@@ -1,12 +1,12 @@
 /** Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team http://www.mod-buildcraft.com
  *
- * BuildCraft is distributed under the terms of the Minecraft Mod Public License 1.0, or MMPL. Please check the contents
+ * BuildCraft is distributed under the terms of the MinecraftClient Mod Public License 1.0, or MMPL. Please check the contents
  * of the license located in http://www.mod-buildcraft.com/MMPL-1.0.txt */
 package buildcraft.api.robots;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NbtCompound;
 
 import buildcraft.api.core.EnumPipePart;
 
@@ -39,16 +39,16 @@ public class ResourceIdRequest extends ResourceIdBlock {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
+    public void writeToNBT(NbtCompound nbt) {
         super.writeToNBT(nbt);
 
-        nbt.setInteger("localId", slot);
+        nbt.putInt("localId", slot);
     }
 
     @Override
-    protected void readFromNBT(NBTTagCompound nbt) {
+    protected void readFromNBT(NbtCompound nbt) {
         super.readFromNBT(nbt);
 
-        slot = nbt.getInteger("localId");
+        slot = nbt.getInt("localId");
     }
 }

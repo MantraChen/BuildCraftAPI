@@ -5,11 +5,11 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 public class SchematicEntityFactory<S extends ISchematicEntity> implements Comparable<SchematicEntityFactory<?>> {
     @Nonnull
-    public final ResourceLocation name;
+    public final Identifier name;
     public final int priority;
     @Nonnull
     public final Predicate<SchematicEntityContext> predicate;
@@ -19,7 +19,7 @@ public class SchematicEntityFactory<S extends ISchematicEntity> implements Compa
     public final Class<S> clazz;
 
     @SuppressWarnings("unchecked")
-    public SchematicEntityFactory(@Nonnull ResourceLocation name,
+    public SchematicEntityFactory(@Nonnull Identifier name,
                                   int priority,
                                   @Nonnull Predicate<SchematicEntityContext> predicate,
                                   @Nonnull Supplier<S> supplier) {

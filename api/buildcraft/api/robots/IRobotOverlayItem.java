@@ -3,12 +3,12 @@ package buildcraft.api.robots;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public interface IRobotOverlayItem {
     boolean isValidRobotOverlay(ItemStack stack);
 
-    @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     void renderRobotOverlay(ItemStack stack, TextureManager textureManager);
 }

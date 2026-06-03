@@ -4,13 +4,13 @@ import java.util.Collection;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.EnumDyeColor;
+import net.minecraft.util.DyeColor;
 
 public interface IFacadeRegistry {
 
     Collection<? extends IFacadeState> getValidFacades();
 
-    IFacadePhasedState createPhasedState(IFacadeState state, @Nullable EnumDyeColor activeColor);
+    IFacadePhasedState createPhasedState(IFacadeState state, @Nullable DyeColor activeColor);
 
     IFacade createPhasedFacade(IFacadePhasedState[] states, boolean isHollow);
 

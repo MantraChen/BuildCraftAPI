@@ -5,11 +5,11 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 public class SchematicBlockFactory<S extends ISchematicBlock> implements Comparable<SchematicBlockFactory<?>> {
     @Nonnull
-    public final ResourceLocation name;
+    public final Identifier name;
     public final int priority;
     @Nonnull
     public final Predicate<SchematicBlockContext> predicate;
@@ -19,7 +19,7 @@ public class SchematicBlockFactory<S extends ISchematicBlock> implements Compara
     public final Class<S> clazz;
 
     @SuppressWarnings("unchecked")
-    public SchematicBlockFactory(@Nonnull ResourceLocation name,
+    public SchematicBlockFactory(@Nonnull Identifier name,
                                  int priority,
                                  @Nonnull Predicate<SchematicBlockContext> predicate,
                                  @Nonnull Supplier<S> supplier) {

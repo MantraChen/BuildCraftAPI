@@ -4,17 +4,17 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.events;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 @Cancelable
 public class RobotPlacementEvent extends Event {
-    public EntityPlayer player;
+    public PlayerEntity player;
     public String robotProgram;
 
-    public RobotPlacementEvent(EntityPlayer player, String robotProgram) {
+    public RobotPlacementEvent(PlayerEntity player, String robotProgram) {
         this.player = player;
         this.robotProgram = robotProgram;
     }

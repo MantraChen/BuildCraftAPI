@@ -11,21 +11,21 @@ import javax.annotation.Nullable;
 
 import net.minecraft.util.math.Direction;
 
-// STUB(R.Chen): FluidStack → Fabric Transfer API FluidVariant + long droplets in Phase 4E.
-// IFluidFilter → Object stub (Forge FluidStack dependency removed).
-// ActionResult<FluidStack> replaced with long (droplet amount) until proper migration.
+// STUB(R.Chen): FluidStackBC → Fabric Transfer API FluidVariant + long droplets in Phase 4E.
+// IFluidFilter → Object stub (Forge FluidStackBC dependency removed).
+// ActionResult<FluidStackBC> replaced with long (droplet amount) until proper migration.
 public interface IFlowFluid {
     /** @deprecated use the version below with a simulate parameter. */
     @Deprecated
     @Nullable
-    default long tryExtractFluid(long droplets, Direction from, /* STUB: FluidStack filter */ Object filter) {
+    default long tryExtractFluid(long droplets, Direction from, /* STUB: FluidStackBC filter */ Object filter) {
         return tryExtractFluid(droplets, from, filter, false);
     }
 
     /** Attempts to extract fluid from the connected tank.
      * STUB(R.Chen): return type will be FluidVariant-based in Phase 4E. */
     @Nullable
-    long tryExtractFluid(long droplets, Direction from, /* STUB: FluidStack filter */ Object filter, boolean simulate);
+    long tryExtractFluid(long droplets, Direction from, /* STUB: FluidStackBC filter */ Object filter, boolean simulate);
 
     /** @deprecated use the version below with a simulate parameter. */
     @Deprecated

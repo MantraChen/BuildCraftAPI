@@ -15,7 +15,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.math.Direction;
 
-// STUB(R.Chen): BlockRenderLayer → RenderLayer; CUTOUT/TRANSLUCENT accessed via RenderLayer.getCutout()/getTranslucent().
+// STUB(R.Chen): RenderLayer → RenderLayer; CUTOUT/TRANSLUCENT accessed via RenderLayer.getCutout()/getTranslucent().
 @Environment(EnvType.CLIENT)
 public abstract class PluggableModelKey {
     public final RenderLayer layer;

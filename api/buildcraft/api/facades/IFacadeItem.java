@@ -7,7 +7,7 @@ package buildcraft.api.facades;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 
 public interface IFacadeItem {
@@ -22,7 +22,7 @@ public interface IFacadeItem {
     }
 
     @Nonnull
-    ItemStack getFacadeForBlock(IBlockState state);
+    ItemStack getFacadeForBlock(BlockState state);
 
     /** @param facade The {@link IFacade} instance. NOTE: This MUST be an object returned from
      *            {@link IFacadeRegistry#createBasicFacade(IFacadeState, boolean)} or

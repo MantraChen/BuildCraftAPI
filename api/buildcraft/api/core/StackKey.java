@@ -8,15 +8,15 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraft.fluid.Fluid;
+import buildcraft.lib.compat.FluidStackBC;
 
 /** This class is used whenever stacks needs to be stored as keys. */
 public final class StackKey {
     public final ItemStack stack;
-    public final FluidStack fluidStack;
+    public final FluidStackBC fluidStack;
 
-    public StackKey(FluidStack fluidStack) {
+    public StackKey(FluidStackBC fluidStack) {
         this(null, fluidStack);
     }
 
@@ -24,25 +24,25 @@ public final class StackKey {
         this(stack, null);
     }
 
-    public StackKey(ItemStack stack, FluidStack fluidStack) {
+    public StackKey(ItemStack stack, FluidStackBC fluidStack) {
         this.stack = stack;
         this.fluidStack = fluidStack;
     }
 
     public static StackKey stack(Item item, int amount, int damage) {
-        return new StackKey(new ItemStack(item, amount, damage));
+        ItemStack s = new ItemStack(item, amount); s.setDamage(damage); return new StackKey(s);
     }
 
     public static StackKey stack(Block block, int amount, int damage) {
-        return new StackKey(new ItemStack(block, amount, damage));
+        ItemStack s = new ItemStack(block.asItem(), amount); s.setDamage(damage); return new StackKey(s);
     }
 
     public static StackKey stack(Item item) {
-        return new StackKey(new ItemStack(item, 1, 0));
+        return new StackKey(new ItemStack(item, 1));
     }
 
     public static StackKey stack(Block block) {
-        return new StackKey(new ItemStack(block, 1, 0));
+        return new StackKey(new ItemStack(block.asItem(), 1));
     }
 
     public static StackKey stack(ItemStack itemStack) {
@@ -50,14 +50,14 @@ public final class StackKey {
     }
 
     public static StackKey fluid(Fluid fluid, int amount) {
-        return new StackKey(new FluidStack(fluid, amount));
+        return new StackKey(new FluidStackBC(fluid, amount));
     }
 
     public static StackKey fluid(Fluid fluid) {
-        return new StackKey(new FluidStack(fluid, 1000));
+        return new StackKey(new FluidStackBC(fluid, 1000));
     }
 
-    public static StackKey fluid(FluidStack fluidStack) {
+    public static StackKey fluid(FluidStackBC fluidStack) {
         return new StackKey(fluidStack);
     }
 
@@ -74,8 +74,8 @@ public final class StackKey {
             return false;
         }
         if (stack != null) {
-            if (stack.getItem() != k.stack.getItem() || stack.getHasSubtypes() && stack.getItemDamage() != k.stack.getItemDamage() || !objectsEqual(
-                    stack.getTagCompound(), k.stack.getTagCompound())) {
+            if (stack.getItem() != k.stack.getItem() || stack.getDamage() != k.stack.getDamage() || !objectsEqual(
+                    stack.getNbt(), k.stack.getNbt())) {
                 return false;
             }
         }
@@ -92,14 +92,15 @@ public final class StackKey {
         int result = 7;
         if (stack != null) {
             result = 31 * result + stack.getItem().hashCode();
-            result = 31 * result + stack.getItemDamage();
-            result = 31 * result + objectHashCode(stack.getTagCompound());
+            result = 31 * result + stack.getDamage();
+            result = 31 * result + objectHashCode(stack.getNbt());
         }
         result = 31 * result + 7;
         if (fluidStack != null) {
-            result = 31 * result + fluidStack.getFluid().getName().hashCode();
-            result = 31 * result + fluidStack.amount;
-            result = 31 * result + objectHashCode(fluidStack.tag);
+            result = 31 * result + fluidStack.getFluid().toString().hashCode();
+            result = 31 * result + (int) fluidStack.amount;
+            // STUB(R.Chen): FluidStackBC carries NBT via FluidVariant components, not a `tag` field — Phase 10
+            result = 31 * result + objectHashCode(null);
         }
         return result;
     }

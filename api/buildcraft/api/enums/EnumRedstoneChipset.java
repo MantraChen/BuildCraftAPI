@@ -4,11 +4,11 @@ import java.util.Locale;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringIdentifiable;
 
 import buildcraft.api.BCItems;
 
-public enum EnumRedstoneChipset implements IStringSerializable {
+public enum EnumRedstoneChipset implements StringIdentifiable {
     RED,
     IRON,
     GOLD,
@@ -23,7 +23,8 @@ public enum EnumRedstoneChipset implements IStringSerializable {
             return ItemStack.EMPTY;
         }
 
-        return new ItemStack(chipset, stackSize, ordinal());
+        // STUB(R.Chen): ItemStack(Item,count,meta) — item flattening removed the meta arg in 1.13+
+        return new ItemStack(chipset, stackSize);
     }
 
     public ItemStack getStack() {
@@ -34,7 +35,7 @@ public enum EnumRedstoneChipset implements IStringSerializable {
         if (stack == null) {
             return RED;
         }
-        return fromOrdinal(stack.getMetadata());
+        return fromOrdinal(stack.getDamage());
     }
 
     public static EnumRedstoneChipset fromOrdinal(int ordinal) {
@@ -44,8 +45,11 @@ public enum EnumRedstoneChipset implements IStringSerializable {
         return values()[ordinal];
     }
 
-    @Override
+    // @Override -- removed: method does not exist in Fabric 1.20.1
     public String getName() {
         return name;
     }
+
+    @Override
+    public String asString() { return getName(); }
 }

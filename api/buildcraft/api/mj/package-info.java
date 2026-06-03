@@ -1,4 +1,4 @@
-/** Contains the Minecraft Joule API (shortened to Mj), reborn.
+/** Contains the MinecraftClient Joule API (shortened to Mj), reborn.
  * <p>
  * MJ is stored in the long type, as micro Mj - so you need a long storing a value of 1 million to have a single MJ. All
  * power should be passed around in code as micro Mj (10 ^ -6 of an Mj), but shown to the player as full MJ - so divided by 1

@@ -7,17 +7,17 @@ package buildcraft.api.core;
 import java.util.Locale;
 import java.util.Random;
 
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.text.translation.I18n;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
-/** Use minecraft's EnumDyeColor in as many places as possible. */
+/** Use minecraft's DyeColor in as many places as possible. */
 @Deprecated
-public enum EnumColor implements IStringSerializable {
+public enum EnumColor implements StringIdentifiable {
 
     BLACK,
     RED,
@@ -46,11 +46,11 @@ public enum EnumColor implements IStringSerializable {
     public static final int[] LIGHT_HEX = { 0x181414, 0xBE2B27, 0x007F0E, 0x89502D, 0x253193, 0x7e34bf, 0x299799, 0xa0a7a7, 0x7A7A7A, 0xD97199,
         0x39D52E, 0xFFD91C, 0x66AAFF, 0xD943C6, 0xEA7835, 0xe4e4e4 };
 
-    @SideOnly(Side.CLIENT)
-    private static ResourceLocation iconSheet;
+    @Environment(EnvType.CLIENT)
+    private static Identifier iconSheet;
 
-    @SideOnly(Side.CLIENT)
-    private static TextureAtlasSprite[] brushSprites;
+    @Environment(EnvType.CLIENT)
+    private static Sprite[] brushSprites;
 
     public int getDarkHex() {
         return DARK_HEX[ordinal()];
@@ -111,7 +111,7 @@ public enum EnumColor implements IStringSerializable {
         return name().replace("_", ".").toLowerCase(Locale.ENGLISH);
     }
 
-    @Override
+    // @Override -- removed: method does not exist in Fabric 1.20.1
     public String getName() {
         return NAMES[ordinal()];
     }
@@ -135,13 +135,16 @@ public enum EnumColor implements IStringSerializable {
         return b.toString().trim();
     }
 
-    @SideOnly(Side.CLIENT)
-    public static void registerSprites(TextureAtlasSprite[] sprites) {
+    @Environment(EnvType.CLIENT)
+    public static void registerSprites(Sprite[] sprites) {
         brushSprites = sprites;
     }
 
-    @SideOnly(Side.CLIENT)
-    public TextureAtlasSprite getSprite() {
+    @Environment(EnvType.CLIENT)
+    public Sprite getSprite() {
         return brushSprites[ordinal()];
     }
+
+    @Override
+    public String asString() { return getName(); }
 }

@@ -6,24 +6,24 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.Identifier;
 
-import net.minecraftforge.registries.IForgeRegistryEntry;
+// STUB(R.Chen): IForgeRegistryEntry dropped — Phase 10
 
 /**
  * @deprecated TEMPORARY CLASS DO NOT USE!
  */
 @Deprecated
-public abstract class AssemblyRecipe implements Comparable<AssemblyRecipe>, IForgeRegistryEntry<AssemblyRecipe> {
-    private ResourceLocation name;
+public abstract class AssemblyRecipe implements Comparable<AssemblyRecipe> {
+    private Identifier name;
 
     /**
      * The outputs this recipe can generate with any of the given inputs
      * @param inputs Current ingredients in the assembly table
      * @return A Set containing all possible outputs given the given inputs or an empty one if nothing can be assembled from the given inputs
      */
-    public abstract Set<ItemStack> getOutputs(NonNullList<ItemStack> inputs);
+    public abstract Set<ItemStack> getOutputs(DefaultedList<ItemStack> inputs);
 
     /**
      * Used to determine all outputs from this recipe for recipe previews (guide book and/or JEI)
@@ -66,19 +66,19 @@ public abstract class AssemblyRecipe implements Comparable<AssemblyRecipe>, IFor
         return name.toString().compareTo(o.name.toString());
     }
 
-    @Override
-    public AssemblyRecipe setRegistryName(ResourceLocation name) {
+    // @Override -- removed: method does not exist in Fabric 1.20.1
+    public AssemblyRecipe setRegistryName(Identifier name) {
         this.name = name;
         return this;
     }
 
     @Nullable
-    @Override
-    public ResourceLocation getRegistryName() {
+    // @Override -- removed: method does not exist in Fabric 1.20.1
+    public Identifier getRegistryName() {
         return name;
     }
 
-    @Override
+    // @Override -- removed: method does not exist in Fabric 1.20.1
     public Class<AssemblyRecipe> getRegistryType() {
         return AssemblyRecipe.class;
     }

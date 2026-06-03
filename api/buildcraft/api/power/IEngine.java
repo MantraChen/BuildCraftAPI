@@ -4,7 +4,7 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.power;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 
 /** Engines should implement this interface if they want to support BuildCraft's behaviour of passing power between
  * engines without using receivePower() (which has other issues). */
@@ -13,7 +13,7 @@ public interface IEngine {
      * 
      * @param side
      * @return */
-    boolean canReceiveFromEngine(EnumFacing side);
+    boolean canReceiveFromEngine(Direction side);
 
     /** Receives power from an engine.
      *

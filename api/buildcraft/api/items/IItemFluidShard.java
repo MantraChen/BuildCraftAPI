@@ -3,10 +3,10 @@ package buildcraft.api.items;
 import javax.annotation.Nullable;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.collection.DefaultedList;
 
-import net.minecraftforge.fluids.FluidStack;
+import buildcraft.lib.compat.FluidStackBC;
 
 public interface IItemFluidShard {
-    void addFluidDrops(NonNullList<ItemStack> toDrop, @Nullable FluidStack fluid);
+    void addFluidDrops(DefaultedList<ItemStack> toDrop, @Nullable FluidStackBC fluid);
 }

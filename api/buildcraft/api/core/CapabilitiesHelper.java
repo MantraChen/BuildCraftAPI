@@ -6,8 +6,8 @@ import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.util.math.Direction;
 
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
@@ -82,12 +82,12 @@ public class CapabilitiesHelper {
         }
 
         @Override
-        public NBTBase writeNBT(Capability<T> capability, T instance, EnumFacing side) {
+        public NbtElement writeNBT(Capability<T> capability, T instance, Direction side) {
             throw new UnsupportedOperationException("You must create your own instances!");
         }
 
         @Override
-        public void readNBT(Capability<T> capability, T instance, EnumFacing side, NBTBase nbt) {
+        public void readNBT(Capability<T> capability, T instance, Direction side, NbtElement nbt) {
             throw new UnsupportedOperationException("You must create your own instances!");
         }
     }
@@ -130,19 +130,8 @@ public class CapabilitiesHelper {
                 + " rather than " + Capability.class);
         }
         Capability<?> cap = (Capability<?>) obj;
-        // Ensure that the given cap is actually *our* capability
-        // compare the given class with the VoidStorage class, as
-        // Capability<T> doesn't have a way of doing that directly.
-        IStorage<?> cStorage = cap.getStorage();
-        if (!(cStorage instanceof CheckedStorage)) {
-            throw new IllegalStateException(
-                "Returned capability storage has a different storage class than expected! " + cStorage.getClass());
-        }
-        CheckedStorage<?> vStorage = (CheckedStorage<?>) cStorage;
-        if (vStorage.clazz != clazz) {
-            throw new IllegalStateException(
-                "Returned capability storage has a different class than expected! " + vStorage.clazz + " vs " + clazz);
-        }
+        // STUB(R.Chen): Forge Capability.getStorage()/IStorage validation removed in Fabric — the
+        // capability is trusted as-is until the Transfer-API rewrite, Phase 10.
         return (Capability<T>) cap;
     }
 
@@ -159,12 +148,12 @@ public class CapabilitiesHelper {
 
     public static class VoidStorage<T> implements Capability.IStorage<T> {
         @Override
-        public NBTBase writeNBT(Capability<T> capability, T instance, EnumFacing side) {
+        public NbtElement writeNBT(Capability<T> capability, T instance, Direction side) {
             throw new IllegalStateException("You must create your own instances!");
         }
 
         @Override
-        public void readNBT(Capability<T> capability, T instance, EnumFacing side, NBTBase nbt) {
+        public void readNBT(Capability<T> capability, T instance, Direction side, NbtElement nbt) {
             throw new IllegalStateException("You must create your own instances!");
         }
     }

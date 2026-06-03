@@ -7,9 +7,9 @@ import javax.annotation.Nullable;
 import com.google.gson.GsonBuilder;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.recipe.Ingredient;
 
-import net.minecraftforge.fluids.FluidStack;
+import buildcraft.lib.compat.FluidStackBC;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public abstract class EventBuildCraftReload extends Event {
@@ -43,7 +43,7 @@ public abstract class EventBuildCraftReload extends Event {
     }
 
     /** Fired after {@link PreLoad}, but before scripts are loaded in order to register custom type adaptors for various
-     * classes. BuildCraft itself adds adaptors for {@link ItemStack}, {@link Ingredient}, and {@link FluidStack} before
+     * classes. BuildCraft itself adds adaptors for {@link ItemStack}, {@link Ingredient}, and {@link FluidStackBC} before
      * this event is fired. */
     public static class PopulateGson extends EventBuildCraftReload {
 

@@ -15,7 +15,7 @@ import net.minecraft.util.collection.DefaultedList;
 
 import buildcraft.api.core.IStackFilter;
 
-// Ported to Fabric 1.20.1 by R.Chen: NonNullList → DefaultedList (NonNullList.create() → DefaultedList.of()).
+// Ported to Fabric 1.20.1 by R.Chen: DefaultedList → DefaultedList (DefaultedList.create() → DefaultedList.of()).
 
 /** A simple way to define something that deals with item insertion and extraction, without caring about slots. */
 public interface IItemTransactor {

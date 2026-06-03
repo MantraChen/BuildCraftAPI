@@ -2,13 +2,11 @@ package buildcraft.api.data;
 
 import java.util.zip.GZIPInputStream;
 
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
+// STUB(R.Chen): net.minecraft.nbt.CompressedStreamTools → NbtIo in Yarn; referenced in javadoc only.
 
 public class NbtSquishConstants {
     /** Default written NBT Tag type- this is provided by
-     * {@link CompressedStreamTools#write(NBTTagCompound, java.io.DataOutput)} and
-     * {@link CompressedStreamTools#read(java.io.DataInput, net.minecraft.nbt.NBTSizeTracker)}.
+     * {@code NbtIo.write(NbtCompound, DataOutput)} and {@code NbtIo.read(DataInput, NbtSizeTracker)}.
      * 
      * Generally more suited to smaller NBT tags, and it writes fairly quickly. Can quickly use up a lot of space for
      * larger/more complex tags so it is recommended that you also pass it through a GZIP compressor to take up a much

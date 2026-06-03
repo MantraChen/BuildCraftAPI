@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-// STUB(R.Chen): INBTSerializable<NBTTagCompound> removed (Forge-only interface).
+// STUB(R.Chen): INBTSerializable<NbtCompound> removed (Forge-only interface).
 // readFromNbt/writeToNbt are retained as plain methods for callers.
 /** Provides a basic implementation of a simple battery. Note that you should call {@link #tick(World, BlockPos)} or
  * {@link #tick(World, Vec3d)} every tick to allow for losing excess power. */
@@ -31,6 +31,15 @@ public class MjBattery {
         nbt.putLong("stored", microJoules);
         return nbt;
     }
+
+    /** Forge-compat alias for {@link #writeToNbt()}. */
+    public NbtCompound createNbt() { return writeToNbt(); }
+
+    /** Forge-compat alias for {@link #writeToNbt()}. */
+    public NbtCompound serializeNBT() { return writeToNbt(); }
+
+    /** Forge-compat alias for {@link #readFromNbt(NbtCompound)}. */
+    public void deserializeNBT(NbtCompound nbt) { readFromNbt(nbt); }
 
     public void readFromNbt(NbtCompound nbt) {
         microJoules = nbt.getLong("stored");

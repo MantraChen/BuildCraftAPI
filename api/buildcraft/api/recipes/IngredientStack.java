@@ -6,7 +6,7 @@
 
 package buildcraft.api.recipes;
 
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.recipe.Ingredient;
 
 import net.minecraftforge.common.crafting.CraftingHelper;
 

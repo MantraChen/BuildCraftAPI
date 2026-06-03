@@ -5,7 +5,7 @@
 package buildcraft.api.robots;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NbtCompound;
 
 import buildcraft.api.mj.MjAPI;
 
@@ -55,11 +55,11 @@ public class AIRobot {
 
     }
 
-    public void writeSelfToNBT(NBTTagCompound nbt) {
+    public void writeSelfToNBT(NbtCompound nbt) {
 
     }
 
-    public void loadSelfFromNBT(NBTTagCompound nbt) {
+    public void loadSelfFromNBT(NbtCompound nbt) {
 
     }
 
@@ -155,30 +155,30 @@ public class AIRobot {
         return delegateAI;
     }
 
-    public final void writeToNBT(NBTTagCompound nbt) {
-        nbt.setString("aiName", RobotManager.getAIRobotName(getClass()));
+    public final void writeToNBT(NbtCompound nbt) {
+        nbt.putString("aiName", RobotManager.getAIRobotName(getClass()));
 
-        NBTTagCompound data = new NBTTagCompound();
+        NbtCompound data = new NbtCompound();
         writeSelfToNBT(data);
-        nbt.setTag("data", data);
+        nbt.put("data", data);
 
         if (delegateAI != null && delegateAI.canLoadFromNBT()) {
-            NBTTagCompound sub = new NBTTagCompound();
+            NbtCompound sub = new NbtCompound();
 
             delegateAI.writeToNBT(sub);
-            nbt.setTag("delegateAI", sub);
+            nbt.put("delegateAI", sub);
         }
     }
 
-    public final void loadFromNBT(NBTTagCompound nbt) {
-        loadSelfFromNBT(nbt.getCompoundTag("data"));
+    public final void loadFromNBT(NbtCompound nbt) {
+        loadSelfFromNBT(nbt.getCompound("data"));
 
-        if (nbt.hasKey("delegateAI")) {
-            NBTTagCompound sub = nbt.getCompoundTag("delegateAI");
+        if (nbt.contains("delegateAI")) {
+            NbtCompound sub = nbt.getCompound("delegateAI");
 
             try {
                 Class<?> aiRobotClass;
-                if (sub.hasKey("class")) {
+                if (sub.contains("class")) {
                     // Migration support for 6.4.x
                     aiRobotClass = RobotManager.getAIRobotByLegacyClassName(sub.getString("class"));
                 } else {
@@ -198,12 +198,12 @@ public class AIRobot {
         }
     }
 
-    public static AIRobot loadAI(NBTTagCompound nbt, EntityRobotBase robot) {
+    public static AIRobot loadAI(NbtCompound nbt, EntityRobotBase robot) {
         AIRobot ai = null;
 
         try {
             Class<?> aiRobotClass;
-            if (nbt.hasKey("class")) {
+            if (nbt.contains("class")) {
                 // Migration support for 6.4.x
                 aiRobotClass = RobotManager.getAIRobotByLegacyClassName(nbt.getString("class"));
             } else {

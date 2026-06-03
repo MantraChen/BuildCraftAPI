@@ -7,7 +7,7 @@ import net.fabricmc.api.Environment;
 
 import net.minecraft.util.math.Direction;
 
-// Ported to Fabric 1.20.1 by R.Chen: EnumFacing → Direction, @SideOnly → @Environment.
+// Ported to Fabric 1.20.1 by R.Chen: Direction → Direction, @SideOnly → @Environment.
 public interface IDebuggable {
     /** Get the debug information from a tile entity as a list of strings, used for the F3 debug menu. The left and
      * right parameters correspond to the sides of the F3 screen.

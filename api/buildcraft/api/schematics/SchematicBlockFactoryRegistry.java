@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Block;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 import buildcraft.api.core.BuildCraftAPI;
 
@@ -57,7 +57,7 @@ public class SchematicBlockFactoryRegistry {
     }
 
     @Nullable
-    public static SchematicBlockFactory<?> getFactoryByName(ResourceLocation name) {
+    public static SchematicBlockFactory<?> getFactoryByName(Identifier name) {
         return FACTORIES.stream()
             .filter(schematicBlockFactory -> schematicBlockFactory.name.equals(name))
             .findFirst()

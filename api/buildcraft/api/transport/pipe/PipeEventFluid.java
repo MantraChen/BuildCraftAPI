@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.util.math.Direction;
 
-// STUB(R.Chen): FluidStack fields replaced with Object stubs until Phase 4E FluidVariant migration.
+// STUB(R.Chen): FluidStackBC fields replaced with Object stubs until Phase 4E FluidVariant migration.
 public abstract class PipeEventFluid extends PipeEvent {
 
     public final IFlowFluid flow;
@@ -34,7 +34,7 @@ public abstract class PipeEventFluid extends PipeEvent {
 
     public static class TryInsert extends PipeEventFluid {
         public final Direction from;
-        /** STUB(R.Chen): FluidStack → FluidVariant + amount in Phase 4E. */
+        /** STUB(R.Chen): FluidStackBC → FluidVariant + amount in Phase 4E. */
         @Nonnull
         public final Object fluid;
 
@@ -46,7 +46,7 @@ public abstract class PipeEventFluid extends PipeEvent {
     }
 
     public static class PreMoveToCentre extends PipeEventFluid {
-        /** STUB(R.Chen): FluidStack → FluidVariant + amount in Phase 4E. */
+        /** STUB(R.Chen): FluidStackBC → FluidVariant + amount in Phase 4E. */
         public final Object fluid;
         public final int totalAcceptable;
         public final int[] totalOffered;
@@ -79,7 +79,7 @@ public abstract class PipeEventFluid extends PipeEvent {
     }
 
     public static class OnMoveToCentre extends PipeEventFluid {
-        /** STUB(R.Chen): FluidStack → FluidVariant + amount in Phase 4E. */
+        /** STUB(R.Chen): FluidStackBC → FluidVariant + amount in Phase 4E. */
         public final Object fluid;
         public final int[] fluidLeavingSide;
         public final int[] fluidEnteringCentre;
@@ -116,7 +116,7 @@ public abstract class PipeEventFluid extends PipeEvent {
     }
 
     public static class SideCheck extends PipeEventFluid {
-        /** STUB(R.Chen): FluidStack → FluidVariant + amount in Phase 4E. */
+        /** STUB(R.Chen): FluidStackBC → FluidVariant + amount in Phase 4E. */
         public final Object fluid;
         private final int[] priority = new int[6];
         private final EnumSet<Direction> allowed = EnumSet.allOf(Direction.class);

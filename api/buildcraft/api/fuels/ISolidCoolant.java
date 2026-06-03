@@ -6,8 +6,8 @@ package buildcraft.api.fuels;
 
 import net.minecraft.item.ItemStack;
 
-import net.minecraftforge.fluids.FluidStack;
+import buildcraft.lib.compat.FluidStackBC;
 
 public interface ISolidCoolant {
-    FluidStack getFluidFromSolidCoolant(ItemStack stack);
+    FluidStackBC getFluidFromSolidCoolant(ItemStack stack);
 }

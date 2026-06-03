@@ -14,8 +14,8 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.Identifier;
 
 import buildcraft.api.core.BuildCraftAPI;
 
@@ -28,7 +28,7 @@ public class AssemblyRecipeBasic extends AssemblyRecipe {
     private final ImmutableSet<IngredientStack> requiredStacks;
     private final ImmutableSet<ItemStack> output;
 
-    public AssemblyRecipeBasic(ResourceLocation name, long requiredMicroJoules, ImmutableSet<IngredientStack> requiredStacks, @Nonnull ItemStack output) {
+    public AssemblyRecipeBasic(Identifier name, long requiredMicroJoules, ImmutableSet<IngredientStack> requiredStacks, @Nonnull ItemStack output) {
         this.requiredMicroJoules = requiredMicroJoules;
         this.requiredStacks = ImmutableSet.copyOf(requiredStacks);
         this.output = ImmutableSet.of(output);
@@ -44,8 +44,8 @@ public class AssemblyRecipeBasic extends AssemblyRecipe {
     }
 
     @Override
-    public Set<ItemStack> getOutputs(NonNullList<ItemStack> inputs) {
-        if (requiredStacks.stream().allMatch((definition) -> inputs.stream().anyMatch((stack) -> !stack.isEmpty() && definition.ingredient.apply(stack) && stack.getCount() >= definition.count)))
+    public Set<ItemStack> getOutputs(DefaultedList<ItemStack> inputs) {
+        if (requiredStacks.stream().allMatch((definition) -> inputs.stream().anyMatch((stack) -> !stack.isEmpty() && definition.ingredient.test(stack) && stack.getCount() >= definition.count)))
             return output;
         return Collections.emptySet();
     }
