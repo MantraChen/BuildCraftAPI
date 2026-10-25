@@ -61,8 +61,10 @@ public interface IPipeHolder extends IRedstoneStatementContainer {
             if (plug.isBlocking()) return null;
         }
         IPipe pipe = getPipe();
-        return pipe != null && pipe.isConnected(side)
-            ? buildcraft.api.mj.MjAPI.findConnector(getNeighbourTile(side), side.getOpposite()) : null;
+        var world = getPipeWorld();
+        var pos = getPipePos().offset(side);
+        return pipe != null && pipe.isConnected(side) && world != null && world.isChunkLoaded(pos)
+            ? buildcraft.api.mj.MjAPI.CONNECTOR.find(world, pos, side.getOpposite()) : null;
     }
 
     IWireManager getWireManager();

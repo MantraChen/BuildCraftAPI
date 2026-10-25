@@ -106,14 +106,20 @@ public final class PipeApi {
         public final boolean isReceiver;
 
         public static PowerTransferInfo createFromLoss(long transferPerTick, long lossPerTick, boolean isReceiver) {
-            return new PowerTransferInfo(transferPerTick, lossPerTick,
-                lossPerTick * MjAPI.MJ / transferPerTick, isReceiver);
+            long rate = Math.max(10, transferPerTick);
+            long loss = Math.max(0, Math.min(rate, lossPerTick));
+            long resistance = java.math.BigInteger.valueOf(loss).multiply(java.math.BigInteger.valueOf(MjAPI.MJ))
+                .divide(java.math.BigInteger.valueOf(rate)).longValueExact();
+            return new PowerTransferInfo(rate, loss, resistance, isReceiver);
         }
 
         public static PowerTransferInfo createFromResistance(long transferPerTick, long resistancePerTick,
             boolean isReceiver) {
-            return new PowerTransferInfo(transferPerTick, resistancePerTick,
-                resistancePerTick * transferPerTick / MjAPI.MJ, isReceiver);
+            long rate = Math.max(10, transferPerTick);
+            long resistance = Math.max(0, Math.min(MjAPI.MJ, resistancePerTick));
+            long loss = java.math.BigInteger.valueOf(resistance).multiply(java.math.BigInteger.valueOf(rate))
+                .divide(java.math.BigInteger.valueOf(MjAPI.MJ)).longValueExact();
+            return new PowerTransferInfo(rate, loss, resistance, isReceiver);
         }
 
         public PowerTransferInfo(long transferPerTick, long lossPerTick, long resistancePerTick, boolean isReceiver) {
