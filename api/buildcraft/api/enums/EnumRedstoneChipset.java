@@ -6,8 +6,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StringIdentifiable;
 
-import buildcraft.api.BCItems;
-
 public enum EnumRedstoneChipset implements StringIdentifiable {
     RED,
     IRON,
@@ -18,13 +16,14 @@ public enum EnumRedstoneChipset implements StringIdentifiable {
     private final String name = name().toLowerCase(Locale.ROOT);
 
     public ItemStack getStack(int stackSize) {
-        Item chipset = BCItems.Silicon.REDSTONE_CHIPSET;
+        Item chipset = net.minecraft.registry.Registries.ITEM.getOrEmpty(new net.minecraft.util.Identifier("buildcraftsilicon","redstone_chipset")).orElse(null);
         if (chipset == null) {
             return ItemStack.EMPTY;
         }
 
-        // STUB(R.Chen): ItemStack(Item,count,meta) — item flattening removed the meta arg in 1.13+
-        return new ItemStack(chipset, stackSize);
+        ItemStack stack=new ItemStack(chipset,stackSize);
+        stack.getOrCreateNbt().putString("chipset",name);
+        return stack;
     }
 
     public ItemStack getStack() {
@@ -32,7 +31,12 @@ public enum EnumRedstoneChipset implements StringIdentifiable {
     }
 
     public static EnumRedstoneChipset fromStack(ItemStack stack) {
-        if (stack == null) {
+        if (stack == null || stack.isEmpty()) {
+            return RED;
+        }
+        if(stack.hasNbt() && stack.getNbt().contains("chipset",net.minecraft.nbt.NbtElement.STRING_TYPE)) {
+            String type=stack.getNbt().getString("chipset");
+            for(var value:values())if(value.name.equals(type))return value;
             return RED;
         }
         return fromOrdinal(stack.getDamage());
