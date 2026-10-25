@@ -8,7 +8,7 @@
 package buildcraft.api.enums;
 
 import java.util.Locale;
-import java.util.function.Supplier;
+import java.util.function.BiFunction;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -26,7 +26,7 @@ public enum EnumSpring implements StringIdentifiable {
     public final int tickRate, chance;
     public BlockState liquidBlock;
     public boolean canGen = true;
-    public Supplier<BlockEntity> tileConstructor;
+    public BiFunction<net.minecraft.util.math.BlockPos, BlockState, BlockEntity> tileConstructor;
 
     private final String lowerCaseName = name().toLowerCase(Locale.ROOT);
 
