@@ -14,8 +14,9 @@ import java.util.EnumSet;
 import javax.annotation.Nonnull;
 
 import net.minecraft.util.math.Direction;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 
-// STUB(R.Chen): FluidStackBC fields replaced with Object stubs until Phase 4E FluidVariant migration.
+/** Fluid routing events. Every amount is expressed in Fabric droplets, including per-side arrays. */
 public abstract class PipeEventFluid extends PipeEvent {
 
     public final IFlowFluid flow;
@@ -34,26 +35,26 @@ public abstract class PipeEventFluid extends PipeEvent {
 
     public static class TryInsert extends PipeEventFluid {
         public final Direction from;
-        /** STUB(R.Chen): FluidStackBC → FluidVariant + amount in Phase 4E. */
         @Nonnull
-        public final Object fluid;
+        public final FluidVariant fluid;
+        public final long amount;
 
-        public TryInsert(IPipeHolder holder, IFlowFluid flow, Direction from, @Nonnull Object fluid) {
+        public TryInsert(IPipeHolder holder, IFlowFluid flow, Direction from, @Nonnull FluidVariant fluid, long amount) {
             super(true, holder, flow);
             this.from = from;
             this.fluid = fluid;
+            this.amount = amount;
         }
     }
 
     public static class PreMoveToCentre extends PipeEventFluid {
-        /** STUB(R.Chen): FluidStackBC → FluidVariant + amount in Phase 4E. */
-        public final Object fluid;
+        public final FluidVariant fluid;
         public final int totalAcceptable;
         public final int[] totalOffered;
         private final int[] totalOfferedCheck;
         public final int[] actuallyOffered;
 
-        public PreMoveToCentre(IPipeHolder holder, IFlowFluid flow, Object fluid, int totalAcceptable,
+        public PreMoveToCentre(IPipeHolder holder, IFlowFluid flow, FluidVariant fluid, int totalAcceptable,
             int[] totalOffered, int[] actuallyOffered) {
             super(holder, flow);
             this.fluid = fluid;
@@ -69,7 +70,7 @@ public abstract class PipeEventFluid extends PipeEvent {
                 if (totalOffered[i] != totalOfferedCheck[i]) {
                     return "Changed totalOffered";
                 }
-                if (actuallyOffered[i] > totalOffered[i]) {
+                if (actuallyOffered[i] < 0 || actuallyOffered[i] > totalOffered[i]) {
                     return "actuallyOffered[" + i + "](=" + actuallyOffered[i]
                         + ") shouldn't be greater than totalOffered[" + i + "](=" + totalOffered[i] + ")";
                 }
@@ -79,13 +80,12 @@ public abstract class PipeEventFluid extends PipeEvent {
     }
 
     public static class OnMoveToCentre extends PipeEventFluid {
-        /** STUB(R.Chen): FluidStackBC → FluidVariant + amount in Phase 4E. */
-        public final Object fluid;
+        public final FluidVariant fluid;
         public final int[] fluidLeavingSide;
         public final int[] fluidEnteringCentre;
         private final int[] fluidLeaveCheck, fluidEnterCheck;
 
-        public OnMoveToCentre(IPipeHolder holder, IFlowFluid flow, Object fluid, int[] fluidLeavingSide,
+        public OnMoveToCentre(IPipeHolder holder, IFlowFluid flow, FluidVariant fluid, int[] fluidLeavingSide,
             int[] fluidEnteringCentre) {
             super(holder, flow);
             this.fluid = fluid;
@@ -98,11 +98,11 @@ public abstract class PipeEventFluid extends PipeEvent {
         @Override
         public String checkStateForErrors() {
             for (int i = 0; i < fluidLeavingSide.length; i++) {
-                if (fluidLeavingSide[i] > fluidLeaveCheck[i]) {
+                if (fluidLeavingSide[i] < 0 || fluidLeavingSide[i] > fluidLeaveCheck[i]) {
                     return "fluidLeavingSide[" + i + "](=" + fluidLeavingSide[i]
                         + ") shouldn't be bigger than its original value!(=" + fluidLeaveCheck[i] + ")";
                 }
-                if (fluidEnteringCentre[i] > fluidEnterCheck[i]) {
+                if (fluidEnteringCentre[i] < 0 || fluidEnteringCentre[i] > fluidEnterCheck[i]) {
                     return "fluidEnteringCentre[" + i + "](=" + fluidEnteringCentre[i]
                         + ") shouldn't be bigger than its original value!(=" + fluidEnterCheck[i] + ")";
                 }
@@ -116,12 +116,11 @@ public abstract class PipeEventFluid extends PipeEvent {
     }
 
     public static class SideCheck extends PipeEventFluid {
-        /** STUB(R.Chen): FluidStackBC → FluidVariant + amount in Phase 4E. */
-        public final Object fluid;
+        public final FluidVariant fluid;
         private final int[] priority = new int[6];
         private final EnumSet<Direction> allowed = EnumSet.allOf(Direction.class);
 
-        public SideCheck(IPipeHolder holder, IFlowFluid flow, Object fluid) {
+        public SideCheck(IPipeHolder holder, IFlowFluid flow, FluidVariant fluid) {
             super(holder, flow);
             this.fluid = fluid;
         }

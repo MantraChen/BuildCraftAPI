@@ -10,48 +10,46 @@ package buildcraft.api.transport.pipe;
 import javax.annotation.Nullable;
 
 import net.minecraft.util.math.Direction;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import java.util.function.Predicate;
 
-// STUB(R.Chen): FluidStackBC → Fabric Transfer API FluidVariant + long droplets in Phase 4E.
-// IFluidFilter → Object stub (Forge FluidStackBC dependency removed).
-// ActionResult<FluidStackBC> replaced with long (droplet amount) until proper migration.
+/** Native fluid identity and exact droplet amounts (81,000 droplets per bucket). */
 public interface IFlowFluid {
     /** @deprecated use the version below with a simulate parameter. */
     @Deprecated
-    @Nullable
-    default long tryExtractFluid(long droplets, Direction from, /* STUB: FluidStackBC filter */ Object filter) {
+    default long tryExtractFluid(long droplets, Direction from, @Nullable FluidVariant filter) {
         return tryExtractFluid(droplets, from, filter, false);
     }
 
-    /** Attempts to extract fluid from the connected tank.
-     * STUB(R.Chen): return type will be FluidVariant-based in Phase 4E. */
-    @Nullable
-    long tryExtractFluid(long droplets, Direction from, /* STUB: FluidStackBC filter */ Object filter, boolean simulate);
+    /** Moves up to the requested droplets from a connected tank; null accepts any fluid. */
+    long tryExtractFluid(long droplets, Direction from, @Nullable FluidVariant filter, boolean simulate);
 
     /** @deprecated use the version below with a simulate parameter. */
     @Deprecated
     default long tryExtractFluidAdv(long droplets, Direction from,
-        /* STUB(R.Chen): IFluidFilter → FluidVariant filter in Phase 4E */ Object filter) {
+        Predicate<FluidVariant> filter) {
         return tryExtractFluidAdv(droplets, from, filter, false);
     }
 
-    /** Advanced extraction.
-     * STUB(R.Chen): IFluidFilter/FluidVariant-based return in Phase 4E. */
+    /** Searches the connected storage for a matching variant, including its NBT. */
     long tryExtractFluidAdv(long droplets, Direction from,
-        /* STUB(R.Chen): IFluidFilter → FluidVariant filter */ Object filter, boolean simulate);
+        Predicate<FluidVariant> filter, boolean simulate);
 
     /** Attempts to insert a fluid directly into the pipe.
-     * STUB(R.Chen): fluid param will be FluidVariant + amount in Phase 4E.
-     *
-     * @param fluid placeholder for FluidVariant
      * @param from The side that the fluid should NOT go in, or null for any direction.
      * @return The amount of fluid accepted in droplets. */
-    long insertFluidsForce(/* STUB: FluidVariant */ Object fluid, long amount, @Nullable Direction from,
+    long insertFluidsForce(FluidVariant fluid, long amount, @Nullable Direction from,
         boolean simulate);
 
     /** Tries to extract fluids directly from the pipe.
-     * STUB(R.Chen): return type will be FluidVariant-based in Phase 4E.
-     *
      * @param section The section to extract from. Null means the center. */
     @Nullable
-    Object extractFluidsForce(long min, long max, @Nullable Direction section, boolean simulate);
+    FluidVolume extractFluidsForce(long min, long max, @Nullable Direction section, boolean simulate);
+
+    /** The exact variant and amount removed by force extraction. */
+    record FluidVolume(FluidVariant resource, long amount) {
+        public FluidVolume {
+            if (resource == null || resource.isBlank() || amount <= 0) throw new IllegalArgumentException("Empty fluid volume");
+        }
+    }
 }
