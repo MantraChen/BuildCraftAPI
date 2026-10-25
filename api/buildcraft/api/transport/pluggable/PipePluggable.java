@@ -122,6 +122,7 @@ public abstract class PipePluggable {
         return false;
     }
 
+    @Environment(EnvType.CLIENT)
     @Nullable
     public PluggableModelKey getModelRenderKey(net.minecraft.client.render.RenderLayer layer) {
         return null;
