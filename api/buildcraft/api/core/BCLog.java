@@ -7,11 +7,10 @@ package buildcraft.api.core;
 
 import org.slf4j.Logger;
 
-import buildcraft.BuildCraftFabric;
+import org.slf4j.LoggerFactory;
 
 public final class BCLog {
-    // STUB(R.Chen): log4j Logger -> slf4j wrapper around BuildCraftFabric.LOGGER
-    public static final Logger logger = BuildCraftFabric.LOGGER;
+    public static final Logger logger = LoggerFactory.getLogger("buildcraft");
 
     /** Deactivate constructor */
     private BCLog() {}
@@ -38,9 +37,9 @@ public final class BCLog {
         }
     }
 
-    // STUB(R.Chen): decouple from BuildCraftAPI.getVersion() to keep libLeaf minimal
     @Deprecated
     public static String getVersion() {
-        return "unknown";
+        return net.fabricmc.loader.api.FabricLoader.getInstance().getModContainer("buildcraft")
+            .map(mod -> mod.getMetadata().getVersion().getFriendlyString()).orElse("unknown");
     }
 }
