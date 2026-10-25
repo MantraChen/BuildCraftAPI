@@ -50,6 +50,21 @@ public interface IPipeHolder extends IRedstoneStatementContainer {
     @Nullable
     <T> T getCapabilityFromPipe(Direction side, @Nonnull /* STUB(R.Chen): Capability<T> */ Object capability);
 
+    /** Resolves power leaving this pipe, honoring internal pluggables and blocked faces. */
+    @Nullable
+    default buildcraft.api.mj.IMjConnector getMjConnectorFromPipe(Direction side) {
+        if (side == null) return null;
+        PipePluggable plug = getPluggable(side);
+        if (plug != null) {
+            buildcraft.api.mj.IMjConnector connector = plug.getInternalMjConnector();
+            if (connector != null) return connector;
+            if (plug.isBlocking()) return null;
+        }
+        IPipe pipe = getPipe();
+        return pipe != null && pipe.isConnected(side)
+            ? buildcraft.api.mj.MjAPI.findConnector(getNeighbourTile(side), side.getOpposite()) : null;
+    }
+
     IWireManager getWireManager();
 
     GameProfile getOwner();

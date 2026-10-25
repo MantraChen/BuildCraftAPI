@@ -90,6 +90,11 @@ public abstract class PipeBehaviour {
 
     public void onTick() {}
 
+    /** MJ service exposed on this pipe face, or null when this behaviour has none. */
+    public buildcraft.api.mj.IMjConnector getMjConnector(Direction facing) {
+        return null;
+    }
+
     /** STUB(R.Chen): Forge Capability → Fabric API Lookup in Phase 4E. */
     public boolean hasCapability(@Nonnull Object capability, Direction facing) {
         return getCapability(capability, facing) != null;

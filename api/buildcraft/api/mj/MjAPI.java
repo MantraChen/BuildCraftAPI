@@ -11,10 +11,29 @@ import java.text.DecimalFormat;
 
 import javax.annotation.Nullable;
 
-// STUB(R.Chen): Forge Capability fields (CAP_CONNECTOR, CAP_RECEIVER, etc.) and the RF-conversion API
-// (CapabilitiesHelper, IMjToRfStatus) are removed. Transfer API lookups will replace them.
-// Only MJ constant, formatMj(), and isRfAutoConversionEnabled() are preserved for compile compatibility.
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
+
 public class MjAPI {
+
+    /** Native, sided MJ lookup. Amounts remain micro-MJ; this is not a Team Reborn energy-unit conversion. */
+    public static final BlockApiLookup<IMjConnector, Direction> CONNECTOR = BlockApiLookup.get(
+        new Identifier("buildcraft", "mj_connector"), IMjConnector.class, Direction.class);
+
+    @Nullable
+    public static IMjConnector findConnector(@Nullable BlockEntity tile, @Nullable Direction side) {
+        if (tile == null || tile.getWorld() == null || tile.isRemoved()) return null;
+        return CONNECTOR.find(tile.getWorld(), tile.getPos(), tile.getCachedState(), tile, side);
+    }
+
+    /** Resolves a receiving connection only when both endpoints allow it. */
+    @Nullable
+    public static IMjReceiver getReceiver(IMjConnector source, @Nullable IMjConnector target) {
+        return target instanceof IMjReceiver receiver && receiver.canReceive()
+            && source.canConnect(receiver) && receiver.canConnect(source) ? receiver : null;
+    }
 
     // TODO(R.Chen): wire up EFFECT_MANAGER on mod init (register via event or initializer).
     @Nullable
@@ -36,5 +55,4 @@ public class MjAPI {
         return false;
     }
 
-    // TODO(R.Chen): CAP_CONNECTOR / CAP_RECEIVER / etc. — register via Transfer API EnergyStorage.SIDED lookup.
 }

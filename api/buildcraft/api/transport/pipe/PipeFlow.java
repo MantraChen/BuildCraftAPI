@@ -83,6 +83,11 @@ public abstract class PipeFlow {
 
     public void onTick() {}
 
+    /** MJ service exposed on this pipe face, or null for flows without MJ transport. */
+    public buildcraft.api.mj.IMjConnector getMjConnector(Direction facing) {
+        return null;
+    }
+
     public void postPluggableTick() {}
 
     public void addDrops(List<ItemStack> toDrop, int fortune) {}

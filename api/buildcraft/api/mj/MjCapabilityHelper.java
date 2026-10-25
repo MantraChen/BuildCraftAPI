@@ -9,15 +9,13 @@ package buildcraft.api.mj;
 
 import javax.annotation.Nonnull;
 
-// STUB(R.Chen): Forge ICapabilityProvider / getCapability() removed. The MJ connector must be exposed via
-// a Transfer API EnergyStorage.SIDED lookup registered against the owning BlockEntityType.
-// This class is retained as a compile-compatibility shim until that lookup is wired up.
+/** Holds a machine's connector for exposure through {@link MjAPI#CONNECTOR}. */
 public class MjCapabilityHelper {
 
     @Nonnull
     public final IMjConnector connector;
 
     public MjCapabilityHelper(@Nonnull IMjConnector connector) {
-        this.connector = connector;
+        this.connector = java.util.Objects.requireNonNull(connector, "connector");
     }
 }

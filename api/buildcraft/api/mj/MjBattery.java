@@ -23,6 +23,7 @@ public class MjBattery {
     private long microJoules = 0;
 
     public MjBattery(long capacity) {
+        if (capacity < 0) throw new IllegalArgumentException("Negative MJ capacity");
         this.capacity = capacity;
     }
 
@@ -42,7 +43,7 @@ public class MjBattery {
     public void deserializeNBT(NbtCompound nbt) { readFromNbt(nbt); }
 
     public void readFromNbt(NbtCompound nbt) {
-        microJoules = nbt.getLong("stored");
+        microJoules = Math.max(0, nbt.getLong("stored"));
     }
 
     public void writeToBuffer(ByteBuf buffer) {
@@ -50,14 +51,18 @@ public class MjBattery {
     }
 
     public void readFromBuffer(ByteBuf buffer) {
-        microJoules = buffer.readLong();
+        microJoules = Math.max(0, buffer.readLong());
     }
 
     public long addPower(long microJoulesToAdd, boolean simulate) {
+        if (microJoulesToAdd < 0) throw new IllegalArgumentException("Negative MJ insertion");
+        // Nominal capacity is intentionally soft: legacy MJ pulses can overfill a battery.
+        // The representable long range, however, must never wrap into negative energy.
+        long accepted = Math.min(microJoulesToAdd, Long.MAX_VALUE - this.microJoules);
         if (!simulate) {
-            this.microJoules += microJoulesToAdd;
+            this.microJoules += accepted;
         }
-        return 0;
+        return microJoulesToAdd - accepted;
     }
 
     /** Attempts to add power, but only if this is not already full.
@@ -65,6 +70,7 @@ public class MjBattery {
      * @param microJoulesToAdd The power to add.
      * @return The excess power. */
     public long addPowerChecking(long microJoulesToAdd, boolean simulate) {
+        if (microJoulesToAdd < 0) throw new IllegalArgumentException("Negative MJ insertion");
         if (isFull()) {
             return microJoulesToAdd;
         } else {
@@ -85,6 +91,7 @@ public class MjBattery {
     }
 
     public long extractPower(long min, long max) {
+        if (min < 0 || max < min) throw new IllegalArgumentException("Invalid MJ extraction range");
         if (microJoules < min) return 0;
         long extracting = Math.min(microJoules, max);
         microJoules -= extracting;
@@ -108,7 +115,7 @@ public class MjBattery {
     }
 
     public void tick(World world, Vec3d position) {
-        if (microJoules > capacity * 2) {
+        if (capacity <= Long.MAX_VALUE / 2 && microJoules > capacity * 2) {
             losePower(world, position);
         }
     }

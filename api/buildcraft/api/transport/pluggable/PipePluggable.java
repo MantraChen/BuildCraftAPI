@@ -78,6 +78,18 @@ public abstract class PipePluggable {
         return false;
     }
 
+    /** Connector exposed to a neighbouring machine. Most pluggables have no MJ service. */
+    @Nullable
+    public buildcraft.api.mj.IMjConnector getMjConnector() {
+        return null;
+    }
+
+    /** Connector exposed to the pipe inside this pluggable (for example, a power adaptor). */
+    @Nullable
+    public buildcraft.api.mj.IMjConnector getInternalMjConnector() {
+        return null;
+    }
+
     /** STUB(R.Chen): Forge Capability<T> → Fabric API Lookup in Phase 4E. */
     public <T> T getCapability(@Nonnull Object cap) {
         return null;
